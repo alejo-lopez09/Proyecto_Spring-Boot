@@ -1,0 +1,15 @@
+schema: plan-to-tasks
+plan: docs/plan.md
+items:
+  - plan_item: "P1"
+    tasks: ["T001", "T002", "T003", "T004"]
+  - plan_item: "P2"
+    tasks: ["T005", "T006", "T007", "T008", "T009"]
+  - plan_item: "P3"
+    tasks: ["T010", "T011", "T012", "T013", "T014"]
+  - plan_item: "P4"
+    tasks: ["T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022"]
+  - plan_item: "P5"
+    tasks: ["T023", "T024", "T025", "T026", "T027", "T028"]
+  - plan_item: "P6"
+    tasks: ["T029", "T030", "T031", "T032", "T033", "T034"]

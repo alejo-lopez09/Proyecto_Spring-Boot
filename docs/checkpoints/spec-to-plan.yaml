@@ -1,0 +1,59 @@
+schema: spec-to-plan
+source_spec: Pasted text #1
+requirements:
+  - id: RF-01
+    plan_items: ["P3"]
+  - id: RF-02
+    plan_items: ["P3"]
+  - id: RF-03
+    plan_items: ["P4"]
+  - id: RF-04
+    plan_items: ["P4"]
+  - id: RF-05
+    plan_items: ["P4"]
+  - id: RF-06
+    plan_items: ["P4"]
+  - id: RF-07
+    plan_items: ["P4"]
+  - id: RF-08
+    plan_items: ["P4"]
+  - id: RF-09
+    plan_items: ["P4"]
+  - id: RF-10
+    plan_items: ["P3"]
+  - id: RF-11
+    plan_items: ["P5"]
+  - id: RF-12
+    plan_items: ["P5"]
+  - id: RF-13
+    plan_items: ["P5"]
+  - id: RF-14
+    plan_items: ["P5"]
+  - id: RF-15
+    plan_items: ["P5"]
+  - id: RN-01
+    plan_items: ["P4"]
+  - id: RN-02
+    plan_items: ["P4"]
+  - id: RN-03
+    plan_items: ["P4"]
+  - id: RN-04
+    plan_items: ["P4"]
+  - id: RN-05
+    plan_items: ["P4"]
+  - id: RN-06
+    plan_items: ["P4"]
+  - id: RN-07
+    plan_items: ["P4"]
+  - id: RN-08
+    plan_items: ["P4"]
+  - id: RN-09
+    plan_items: ["P4"]
+  - id: RN-10
+    plan_items: ["P4"]
+  - id: RN-11
+    plan_items: ["P2", "P3"]
+  - id: RN-12
+    plan_items: ["P2", "P3"]
+  - id: RN-13
+    plan_items: ["P5"]
