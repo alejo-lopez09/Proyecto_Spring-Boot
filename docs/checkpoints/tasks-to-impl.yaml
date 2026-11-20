@@ -1,0 +1,110 @@
+schema: tasks-to-impl
+metadata:
+  generated: "2026-11-20"
+  source_tasks: "docs/plan.md"
+  last_updated: "2026-11-20"
+
+summary:
+  total_tasks: 34
+  completed_tasks: 4
+  in_progress_tasks: 0
+  pending_tasks: 30
+  completion_percentage: 11.8
+
+tasks:
+  - task_id: "T001"
+    description: "Revisar entidades JPA y registrar el análisis"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "docs/analisis.md"
+          changes:
+            - change_type: "created"
+              description: "Modelo observado y brechas a verificar"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 13
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Baseline verde"
+    upstream_trace:
+      plan_item: "1.1"
+      requirements: ["RN-01", "RN-02", "RN-04", "RN-07", "RN-09", "RN-10"]
+      full_trace: "Sección 2 del enunciado -> Paso 1.1 -> T001 -> docs/analisis.md"
+
+  - task_id: "T002"
+    description: "Revisar repositorios JPA y consultas de bloqueo"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "docs/analisis.md"
+          changes:
+            - change_type: "modified"
+              description: "Documentó consultas detalladas y bloqueo pesimista"
+    upstream_trace:
+      plan_item: "1.2"
+      requirements: ["RN-01", "RF-03", "RF-05"]
+      full_trace: "Requisitos RF-03/RF-05/RN-01 -> Paso 1.2 -> T002 -> docs/analisis.md"
+
+  - task_id: "T003"
+    description: "Ejecutar y registrar el baseline Maven"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "docs/analisis.md"
+          changes:
+            - change_type: "modified"
+              description: "Registró 13 pruebas aprobadas"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 13
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "BUILD SUCCESS"
+    upstream_trace:
+      plan_item: "1.3"
+      requirements: ["RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07", "RF-08", "RF-09", "RF-10", "RF-11", "RF-12", "RF-13", "RF-14", "RF-15"]
+      full_trace: "Baseline funcional -> Paso 1.3 -> T003"
+
+  - task_id: "T004"
+    description: "Congelar la matriz de escenarios"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "docs/analisis.md"
+          changes:
+            - change_type: "modified"
+              description: "Añadió matriz de los 14 escenarios"
+    upstream_trace:
+      plan_item: "1.4"
+      requirements: ["RN-01", "RN-02", "RN-03", "RN-08", "RN-09", "RN-12"]
+      full_trace: "Escenarios de aceptación -> Paso 1.4 -> T004 -> docs/analisis.md"
+
+pending_tasks:
+  - task_id: "T005"
+    description: "Verificar relaciones JPA, fetch, cascade y orphanRemoval"
+    blocked_by: []
+    priority: "P1"
+
+untracked_changes: []
+
+traceability_chain:
+  - chain_id: "TRACE-P1"
+    requirement: "RF-01 a RF-15; RN-01 a RN-13"
+    plan_phase: "Paso 1"
+    plan_item: "1.1-1.4"
+    tasks: ["T001", "T002", "T003", "T004"]
+    files: ["docs/analisis.md", "docs/plan.md"]
+    status: "complete"
+
+validation:
+  passed: true
+  errors: []
+  warnings: []
+  blocking_issues: []

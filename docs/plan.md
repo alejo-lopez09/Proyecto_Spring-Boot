@@ -39,10 +39,10 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 1: Auditoría y congelación del comportamiento
 
-- [ ] T001 [G1] [Plan:1.1] Revisar las entidades y el diagrama JPA contra la sección 2 del enunciado; registrar brechas en `docs/analisis.md`.
-- [ ] T002 [G1] [Plan:1.2] Revisar repositorios, consultas derivadas y consultas por bloqueo en `src/main/java/com/proyecto/spring/persistence/`.
-- [ ] T003 [G1] [Plan:1.3] Ejecutar el baseline `mvnw test` y registrar el resultado.
-- [ ] T004 [Cross-cutting] [Plan:1.4] Congelar la matriz de 20 escenarios REQ-FUNC/RN/endpoint antes de modificar código.
+- [x] T001 [G1] [Plan:1.1] Revisar las entidades y el diagrama JPA contra la sección 2 del enunciado; registrar brechas en `docs/analisis.md`.
+- [x] T002 [G1] [Plan:1.2] Revisar repositorios, consultas derivadas y consultas por bloqueo en `src/main/java/com/proyecto/spring/persistence/`.
+- [x] T003 [G1] [Plan:1.3] Ejecutar el baseline `mvnw test` y registrar el resultado.
+- [x] T004 [Cross-cutting] [Plan:1.4] Congelar la matriz de 20 escenarios REQ-FUNC/RN/endpoint antes de modificar código.
 
 ### Paso 2: Modelo JPA y datos semilla
 

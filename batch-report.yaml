@@ -1,0 +1,73 @@
+batch_id: "B01"
+completed_tasks: ["T001", "T002", "T003", "T004"]
+blocked_tasks: []
+files_changed:
+  T001:
+    - file: "docs/analisis.md"
+      change_type: "created"
+      description: "Analizó entidades JPA y relaciones"
+  T002:
+    - file: "docs/analisis.md"
+      change_type: "modified"
+      description: "Documentó repositorios y concurrencia"
+  T003:
+    - file: "docs/analisis.md"
+      change_type: "modified"
+      description: "Registró el baseline Maven"
+  T004:
+    - file: "docs/analisis.md"
+      change_type: "modified"
+      description: "Congeló la matriz de escenarios"
+upstream_artifacts_consumed:
+  T001:
+    - artifact: "docs/plan.md"
+      used_for: "Fases y trazabilidad"
+    - artifact: "Enunciado adjunto Pasted text #1"
+      used_for: "Modelo JPA, reglas y endpoints"
+  T002:
+    - artifact: "src/main/java/com/proyecto/spring/persistence/"
+      used_for: "Consultas, consultas detalladas y bloqueo"
+  T003:
+    - artifact: "mvnw test"
+      used_for: "Baseline automatizado"
+  T004:
+    - artifact: "Enunciado adjunto Pasted text #1"
+      used_for: "Catorce escenarios de aceptación"
+evidence_mapping:
+  T001:
+    - upstream: "Sección 2 del enunciado"
+      output: "docs/analisis.md"
+      evidence: "Modelo JPA observado"
+  T002:
+    - upstream: "RN-01 y consultas de repositorio"
+      output: "docs/analisis.md"
+      evidence: "Criterio de solapamiento y bloqueo"
+  T003:
+    - upstream: "Baseline requerido"
+      output: "docs/analisis.md"
+      evidence: "13/13 pruebas aprobadas"
+  T004:
+    - upstream: "Escenarios de aceptación"
+      output: "docs/analisis.md"
+      evidence: "Matriz A1-A14"
+traceability:
+  - requirement: "RF-01-RF-15"
+    plan_item: "1.1-1.4"
+    task: "T001-T004"
+    files: ["docs/analisis.md", "docs/plan.md"]
+    status: "completed"
+  - requirement: "RN-01-RN-13"
+    plan_item: "1.1-1.4"
+    task: "T001-T004"
+    files: ["docs/analisis.md", "docs/plan.md"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings: []
+test_results:
+  T003:
+    command: ".\\mvnw.cmd test"
+    passed: 13
+    failed: 0
+    skipped: 0
+    failures: []
