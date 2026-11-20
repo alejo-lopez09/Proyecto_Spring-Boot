@@ -46,11 +46,11 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 2: Modelo JPA y datos semilla
 
-- [ ] T005 [G1] [P] [Plan:2.1] Verificar relaciones, fetch, cascade y orphanRemoval en `src/main/java/com/proyecto/spring/domain/`.
-- [ ] T006 [G1] [Plan:2.2] Completar o corregir los índices y restricciones únicos definidos por RN-11.
-- [ ] T007 [G1] [Plan:2.3] Verificar que `src/main/resources/import.sql` contiene 2 sedes, 6 salas, 4 equipos, 3 servicios, 3 planes, 5 miembros, 4 cuentas y 15 reservas.
-- [ ] T008 [G1] [Plan:2.4] Confirmar que las fechas semilla son relativas y que las reservas pasadas/futuras permiten probar estados.
-- [ ] T009 [G1] [Plan:2.5] Ejecutar el arranque con H2/MySQL y verificar las tablas mediante la consola.
+- [x] T005 [G1] [P] [Plan:2.1] Verificar relaciones, fetch, cascade y orphanRemoval en `src/main/java/com/proyecto/spring/domain/`.
+- [x] T006 [G1] [Plan:2.2] Completar o corregir los índices y restricciones únicos definidos por RN-11.
+- [x] T007 [G1] [Plan:2.3] Verificar que `src/main/resources/import.sql` contiene 2 sedes, 6 salas, 4 equipos, 3 servicios, 3 planes, 5 miembros, 4 cuentas y 15 reservas.
+- [x] T008 [G1] [Plan:2.4] Confirmar que las fechas semilla son relativas y que las reservas pasadas/futuras permiten probar estados.
+- [x] T009 [G1] [Plan:2.5] Ejecutar el arranque con H2/MySQL y verificar las tablas mediante la consola.
 
 ### Paso 3: Catálogos y miembros
 

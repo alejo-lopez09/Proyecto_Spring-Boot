@@ -58,3 +58,10 @@ Además se mantienen las trazas RF-01 a RF-15 y RN-01 a RN-13 documentadas en `d
 Comando: `.\mvnw.cmd test`
 
 Resultado inicial: 13 pruebas ejecutadas, 13 aprobadas, 0 fallidas, 0 omitidas.
+
+## Verificación del lote JPA y seed
+
+- `CoworkingApiTests.importsRequiredSeedEntityCountsAndRelations` confirmó los mínimos de sedes, salas, equipos, planes, servicios, miembros, cuentas, reservas y detalles.
+- También confirmó una sala inactiva y un miembro suspendido.
+- Las 10 pruebas de `CoworkingApiTests` pasan.
+- Docker no está ejecutándose en el entorno actual, por lo que el arranque físico con MySQL no pudo verificarse en este lote; la configuración Maven/H2 sí creó el esquema y importó los datos.

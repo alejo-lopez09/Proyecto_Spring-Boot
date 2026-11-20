@@ -6,12 +6,127 @@ metadata:
 
 summary:
   total_tasks: 34
-  completed_tasks: 4
+  completed_tasks: 9
   in_progress_tasks: 0
-  pending_tasks: 30
-  completion_percentage: 11.8
+  pending_tasks: 25
+  completion_percentage: 26.5
 
 tasks:
+  - task_id: "T005"
+    description: "Verificar relaciones JPA, fetch, cascade y orphanRemoval"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+          changes:
+            - change_type: "modified"
+              description: "Agregó prueba de integridad del modelo semillado"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+        passed: 10
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Relaciones y seed validados con H2"
+    upstream_trace:
+      plan_item: "2.1"
+      requirements: ["RN-11", "RN-12"]
+      full_trace: "Modelo JPA -> Paso 2.1 -> T005 -> prueba de entidades"
+
+  - task_id: "T006"
+    description: "Verificar restricciones únicas"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/main/java/com/proyecto/spring/domain/"
+          changes:
+            - change_type: "modified"
+              description: "Verificadas las restricciones existentes; no requirió cambios"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+        passed: 10
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Documento, email, usuario, nombre de sala/equipamiento/servicio/plan presentes"
+    upstream_trace:
+      plan_item: "2.2"
+      requirements: ["RN-11"]
+      full_trace: "RN-11 -> Paso 2.2 -> T006 -> entidades JPA"
+
+  - task_id: "T007"
+    description: "Verificar datos semilla obligatorios"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+          changes:
+            - change_type: "modified"
+              description: "Agregó conteos exactos de todas las entidades seed"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+        passed: 10
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Conteos mínimos verificados"
+    upstream_trace:
+      plan_item: "2.3"
+      requirements: ["RF-01", "RF-02", "RF-04", "RF-05"]
+      full_trace: "Datos de prueba -> Paso 2.3 -> T007 -> import.sql"
+
+  - task_id: "T008"
+    description: "Verificar fechas semilla relativas"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/main/resources/import.sql"
+          changes:
+            - change_type: "modified"
+              description: "Verificadas fechas dinámicas existentes; no requirió cambios"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+        passed: 10
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Las reservas usan CURRENT_TIMESTAMP/CURRENT_DATE"
+    upstream_trace:
+      plan_item: "2.4"
+      requirements: ["RN-03", "RN-08", "RN-09"]
+      full_trace: "Fechas semilla -> Paso 2.4 -> T008 -> import.sql"
+
+  - task_id: "T009"
+    description: "Verificar arranque y carga del esquema"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/resources/application.properties"
+          changes:
+            - change_type: "modified"
+              description: "Verificado arranque H2; no requirió cambios"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+        passed: 10
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Arranque H2 exitoso; Docker/MySQL físico no disponible"
+    upstream_trace:
+      plan_item: "2.5"
+      requirements: ["RF-15"]
+      full_trace: "Arranque JPA -> Paso 2.5 -> T009 -> H2"
+
   - task_id: "T001"
     description: "Revisar entidades JPA y registrar el análisis"
     status: "completed"
@@ -87,8 +202,8 @@ tasks:
       full_trace: "Escenarios de aceptación -> Paso 1.4 -> T004 -> docs/analisis.md"
 
 pending_tasks:
-  - task_id: "T005"
-    description: "Verificar relaciones JPA, fetch, cascade y orphanRemoval"
+  - task_id: "T010"
+    description: "Completar CRUD y validaciones de catálogos"
     blocked_by: []
     priority: "P1"
 

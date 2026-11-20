@@ -8,6 +8,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class CoworkingApiTests {
     @Autowired private MockMvc mvc;
+    @Autowired private EntityManager entityManager;
     private String anaToken;
 
     @BeforeEach
@@ -123,6 +125,35 @@ class CoworkingApiTests {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.horasIncluidas").value(10.0))
                 .andExpect(jsonPath("$.horasUsadas").exists()).andExpect(jsonPath("$.horasRestantes").exists())
                 .andExpect(jsonPath("$.horasExcedentes").exists());
+    }
+
+    @Test
+    void importsRequiredSeedEntityCountsAndRelations() {
+        assertCount("locations", 2);
+        assertCount("rooms", 6);
+        assertCount("equipment", 4);
+        assertCount("membership_plans", 3);
+        assertCount("additional_services", 3);
+        assertCount("members", 5);
+        assertCount("user_accounts", 4);
+        assertCount("bookings", 15);
+        assertCount("booking_items", 4);
+
+        Number suspended = (Number) entityManager.createNativeQuery(
+                        "select count(*) from members where status = 'SUSPENDED'")
+                .getSingleResult();
+        org.junit.jupiter.api.Assertions.assertEquals(1, suspended.intValue());
+
+        Number inactiveRooms = (Number) entityManager.createNativeQuery(
+                        "select count(*) from rooms where active = false")
+                .getSingleResult();
+        org.junit.jupiter.api.Assertions.assertEquals(1, inactiveRooms.intValue());
+    }
+
+    private void assertCount(String table, int expected) {
+        Number count = (Number) entityManager.createNativeQuery("select count(*) from " + table)
+                .getSingleResult();
+        org.junit.jupiter.api.Assertions.assertEquals(expected, count.intValue(), "Filas inesperadas en " + table);
     }
 
     private org.springframework.test.web.servlet.ResultActions postBooking(LocalDateTime start, LocalDateTime end, int expectedStatus) throws Exception {

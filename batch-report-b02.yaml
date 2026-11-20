@@ -1,0 +1,63 @@
+batch_id: "B02"
+completed_tasks: ["T005", "T006", "T007", "T008", "T009"]
+blocked_tasks: []
+files_changed:
+  T005:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Agregó prueba JPA y conteos seed"
+  T006:
+    - file: "src/main/java/com/proyecto/spring/domain/"
+      change_type: "modified"
+      description: "Verificó restricciones únicas existentes"
+  T007:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Verificó los conteos obligatorios"
+  T008:
+    - file: "src/main/resources/import.sql"
+      change_type: "modified"
+      description: "Verificó fechas dinámicas relativas"
+  T009:
+    - file: "src/test/resources/application.properties"
+      change_type: "modified"
+      description: "Verificó arranque H2"
+upstream_artifacts_consumed:
+  T005:
+    - artifact: "src/main/java/com/proyecto/spring/domain/"
+      used_for: "Relaciones JPA, fetch y orphanRemoval"
+  T006:
+    - artifact: "src/main/java/com/proyecto/spring/domain/"
+      used_for: "RN-11 y unicidad"
+  T007:
+    - artifact: "src/main/resources/import.sql"
+      used_for: "Datos semilla obligatorios"
+  T008:
+    - artifact: "src/main/resources/import.sql"
+      used_for: "Fechas relativas"
+  T009:
+    - artifact: "src/test/resources/application.properties"
+      used_for: "Arranque aislado H2"
+traceability:
+  - requirement: "RN-11"
+    plan_item: "2.1-2.2"
+    task: "T005-T006"
+    files: ["src/main/java/com/proyecto/spring/domain/", "src/test/java/com/proyecto/spring/CoworkingApiTests.java"]
+    status: "completed"
+  - requirement: "RF-01-RF-02-RF-04-RF-05"
+    plan_item: "2.3-2.5"
+    task: "T007-T009"
+    files: ["src/main/resources/import.sql", "src/test/resources/application.properties"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings:
+  - severity: "MEDIUM"
+    message: "Docker Desktop no está disponible, por lo que no se pudo validar el arranque físico con MySQL."
+test_results:
+  T005-T009:
+    command: ".\\mvnw.cmd -Dtest=CoworkingApiTests test"
+    passed: 10
+    failed: 0
+    skipped: 0
+    failures: []
