@@ -6,10 +6,10 @@ metadata:
 
 summary:
   total_tasks: 34
-  completed_tasks: 14
+  completed_tasks: 22
   in_progress_tasks: 0
-  pending_tasks: 20
-  completion_percentage: 41.2
+  pending_tasks: 12
+  completion_percentage: 64.7
 
 tasks:
   - task_id: "T010"
@@ -311,8 +311,8 @@ tasks:
       full_trace: "Escenarios de aceptación -> Paso 1.4 -> T004 -> docs/analisis.md"
 
 pending_tasks:
-  - task_id: "T015"
-    description: "Consolidar validaciones RN-02, RN-03 y RN-04"
+  - task_id: "T023"
+    description: "Verificar login JWT y perfil"
     blocked_by: []
     priority: "P1"
 

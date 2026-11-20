@@ -175,6 +175,36 @@ class CoworkingApiTests {
                 .andExpect(jsonPath("$.codigo").value("RN-12"));
     }
 
+    @Test
+    void rejectsInvalidBookingDurationsAndOutsideLocationHours() throws Exception {
+        LocalDate day = LocalDate.now().plusDays(6);
+        LocalDateTime start = day.atTime(12, 0);
+
+        postBooking(start, start.plusMinutes(45), 409)
+                .andExpect(jsonPath("$.codigo").value("RN-02"));
+        postBooking(day.atTime(7, 30), day.atTime(8, 30), 409)
+                .andExpect(jsonPath("$.codigo").value("RN-03"));
+        postBooking(start, start.plusHours(9), 409)
+                .andExpect(jsonPath("$.codigo").value("RN-02"));
+    }
+
+    @Test
+    void rejectsConfirmOfCancelledBookingAndServiceChangeAfterConfirmation() throws Exception {
+        String receptionistToken = loginAs("reception", "password");
+
+        mvc.perform(post("/api/reservas/7/confirmar")
+                        .header("Authorization", "Bearer " + receptionistToken))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("RN-09"));
+
+        mvc.perform(post("/api/reservas/3/servicios")
+                        .header("Authorization", "Bearer " + receptionistToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"servicioId\":1,\"quantity\":1}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("RN-10"));
+    }
+
     private void assertCount(String table, int expected) {
         Number count = (Number) entityManager.createNativeQuery("select count(*) from " + table)
                 .getSingleResult();

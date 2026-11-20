@@ -1,0 +1,65 @@
+batch_id: "B04"
+completed_tasks: ["T015", "T016", "T017", "T018", "T019", "T020", "T021", "T022"]
+blocked_tasks: []
+files_changed:
+  T015:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Probó duración y horario de sede"
+  T016:
+    - file: "src/main/java/com/proyecto/spring/business/BookingServiceImpl.java"
+      change_type: "modified"
+      description: "Verificó bloqueo pesimista y criterio de extremos abiertos"
+  T017:
+    - file: "src/main/java/com/proyecto/spring/business/BookingServiceImpl.java"
+      change_type: "modified"
+      description: "Verificó activos, capacidad y costo mensual"
+  T018:
+    - file: "src/test/java/com/proyecto/spring/BookingCancellationRulesTests.java"
+      change_type: "modified"
+      description: "Probó 24 h, 5 h y 1 h"
+  T019:
+    - file: "src/test/java/com/proyecto/spring/BookingCancellationRulesTests.java"
+      change_type: "modified"
+      description: "Probó confirmación/completado inválidos"
+  T020:
+    - file: "src/test/java/com/proyecto/spring/BookingCancellationRulesTests.java"
+      change_type: "modified"
+      description: "Probó RN-10 fuera de PENDING"
+  T021:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Probó disponibilidad con filtros"
+  T022:
+    - file: "src/main/java/com/proyecto/spring/business/BookingServiceImpl.java"
+      change_type: "modified"
+      description: "Verificó bloqueo pesimista para solicitudes concurrentes"
+upstream_artifacts_consumed:
+  T015-T022:
+    - artifact: "src/main/java/com/proyecto/spring/business/BookingServiceImpl.java"
+      used_for: "RN-01 a RN-10"
+    - artifact: "src/main/java/com/proyecto/spring/persistence/BookingRepository.java"
+      used_for: "Solapamientos y consultas mensuales"
+traceability:
+  - requirement: "RN-01-RN-10"
+    plan_item: "4.1-4.8"
+    task: "T015-T022"
+    files: ["src/main/java/com/proyecto/spring/business/BookingServiceImpl.java", "src/test/java/com/proyecto/spring/CoworkingApiTests.java", "src/test/java/com/proyecto/spring/BookingCancellationRulesTests.java"]
+    status: "completed"
+  - requirement: "RF-03-RF-09"
+    plan_item: "4.1-4.8"
+    task: "T015-T022"
+    files: ["src/main/java/com/proyecto/spring/presentation/BookingController.java", "src/main/java/com/proyecto/spring/business/BookingServiceImpl.java"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings:
+  - severity: "MEDIUM"
+    message: "T022 está cubierto por bloqueo pesimista y solapamiento revisado; no se ejecutó una prueba física real con MySQL/Docker concurrente."
+test_results:
+  T015-T022:
+    command: ".\\mvnw.cmd '-Dtest=BookingCancellationRulesTests,CoworkingApiTests' test"
+    passed: 18
+    failed: 0
+    skipped: 0
+    failures: []

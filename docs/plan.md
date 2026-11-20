@@ -62,14 +62,14 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 4: Reglas de reservas
 
-- [ ] T015 [G3] [Plan:4.1] Consolidar validaciones RN-02, RN-03 y RN-04 en `BookingServiceImpl.java`.
-- [ ] T016 [G3] [Plan:4.2] Probar solapamiento por extremos abiertos y bloqueo pesimista RN-01.
-- [ ] T017 [G3] [Plan:4.3] Verificar capacidad, miembro activo, máximo de reservas y costo mensual RN-05 a RN-07.
-- [ ] T018 [G3] [Plan:4.4] Verificar cancelación por anticipación y totalización de cargo RN-08.
-- [ ] T019 [G3] [Plan:4.5] Verificar transiciones PENDING → CONFIRMED → COMPLETED/CANCELLED RN-09.
-- [ ] T020 [G3] [Plan:4.6] Verificar modificación de BookingItem solo en PENDING y preservación del precio aplicado RN-10.
-- [ ] T021 [G3] [Plan:4.7] Completar disponibilidad por sede, capacidad y equipamientos RF-03.
-- [ ] T022 [G3] [Plan:4.8] Añadir pruebas específicas para reservas simultáneas con dos hilos/transacciones.
+- [x] T015 [G3] [Plan:4.1] Consolidar validaciones RN-02, RN-03 y RN-04 en `BookingServiceImpl.java`.
+- [x] T016 [G3] [Plan:4.2] Probar solapamiento por extremos abiertos y bloqueo pesimista RN-01.
+- [x] T017 [G3] [Plan:4.3] Verificar capacidad, miembro activo, máximo de reservas y costo mensual RN-05 a RN-07.
+- [x] T018 [G3] [Plan:4.4] Verificar cancelación por anticipación y totalización de cargo RN-08.
+- [x] T019 [G3] [Plan:4.5] Verificar transiciones PENDING → CONFIRMED → COMPLETED/CANCELLED RN-09.
+- [x] T020 [G3] [Plan:4.6] Verificar modificación de BookingItem solo en PENDING y preservación del precio aplicado RN-10.
+- [x] T021 [G3] [Plan:4.7] Completar disponibilidad por sede, capacidad y equipamientos RF-03.
+- [x] T022 [G3] [Plan:4.8] Añadir pruebas específicas para reservas simultáneas con dos hilos/transacciones.
 
 ### Paso 5: Seguridad, errores y Swagger
 

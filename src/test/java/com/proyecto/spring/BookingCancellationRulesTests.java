@@ -4,6 +4,7 @@ import com.proyecto.spring.business.BookingServiceImpl;
 import com.proyecto.spring.business.BusinessException;
 import com.proyecto.spring.domain.*;
 import com.proyecto.spring.persistence.*;
+import com.proyecto.spring.presentation.dto.ApiDtos.*;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.*;
@@ -45,6 +46,32 @@ class BookingCancellationRulesTests {
 
         assertEquals("RN-08", error.getCodigo());
         assertEquals(BookingStatus.PENDING, booking.getStatus());
+    }
+
+    @Test
+    void cancelledBookingCannotBeConfirmedOrCompleted() {
+        Booking booking = bookingAt(NOW.plusHours(24));
+        booking.setStatus(BookingStatus.CANCELLED);
+        BookingServiceImpl service = serviceFor(booking);
+
+        assertThrows(BusinessException.class, () -> service.confirm(booking.getId()));
+        assertThrows(BusinessException.class, () -> service.complete(booking.getId()));
+    }
+
+    @Test
+    void servicesCannotBeChangedOutsidePendingStatus() {
+        Booking booking = bookingAt(NOW.plusHours(24));
+        booking.setStatus(BookingStatus.CONFIRMED);
+        BookingServiceImpl service = serviceFor(booking);
+        BookingItemRequest request = new BookingItemRequest(1L, 1);
+
+        BusinessException addError = assertThrows(BusinessException.class,
+                () -> service.addService(booking.getId(), request));
+        BusinessException removeError = assertThrows(BusinessException.class,
+                () -> service.removeService(booking.getId(), 1L));
+
+        assertEquals("RN-10", addError.getCodigo());
+        assertEquals("RN-10", removeError.getCodigo());
     }
 
     private BookingServiceImpl serviceFor(Booking booking) {
