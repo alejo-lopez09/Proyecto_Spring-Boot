@@ -68,3 +68,23 @@ Iniciá sesión con `POST /auth/login` y enviá el token recibido en `Authorizat
 Los errores usan siempre `{ "error": "...", "codigo": "...", "timestamp": "..." }`. Códigos frecuentes: `RN-01` (cruce de sala), `RN-02` (duración), `RN-03` (horario/anticipación), `RN-05` (miembro suspendido), `RN-06` (límite de reservas), `RN-08` (cancelación), `RN-09` (transición de estado), `RN-10` (servicios) y `RN-12` (recurso en uso). La política de cancelación es sin cargo con 24 h o más, 50 % del costo de sala entre 2 y 24 h, y no permite cancelar con menos de 2 h.
 
 La creación de reservas serializa los intentos para la misma sala mediante bloqueo pesimista de la fila de sala, y vuelve a comprobar los cruces dentro de la transacción. Los límites de fecha/hora usan el bean `Clock`, que también puede reemplazarse en pruebas.
+
+## Pruebas y entregables
+
+Ejecutá toda la suite con:
+
+```powershell
+.\mvnw.cmd test
+```
+
+Generá el artefacto ejecutable con:
+
+```powershell
+.\mvnw.cmd package
+```
+
+- Los escenarios HTTP de reserva, membresía, seguridad y catálogos están en `src/test/java/com/proyecto/spring/CoworkingApiTests.java`.
+- Las políticas de cancelación están en `src/test/java/com/proyecto/spring/BookingCancellationRulesTests.java`.
+- La colección de los 14 escenarios está en `docs/CoworkHub.postman_collection.json`.
+- El contrato OpenAPI exportado está en `docs/openapi.json`.
+- El plan y la trazabilidad están en `docs/plan.md` y `docs/checkpoints/`.

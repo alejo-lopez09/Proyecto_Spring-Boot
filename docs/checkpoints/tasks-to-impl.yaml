@@ -6,10 +6,10 @@ metadata:
 
 summary:
   total_tasks: 34
-  completed_tasks: 28
+  completed_tasks: 34
   in_progress_tasks: 0
-  pending_tasks: 6
-  completion_percentage: 82.4
+  pending_tasks: 0
+  completion_percentage: 100.0
 
 tasks:
   - task_id: "T010"
@@ -311,10 +311,7 @@ tasks:
       full_trace: "Escenarios de aceptación -> Paso 1.4 -> T004 -> docs/analisis.md"
 
 pending_tasks:
-  - task_id: "T029"
-    description: "Ejecutar los 14 escenarios de aceptación"
-    blocked_by: []
-    priority: "P1"
+  []
 
 untracked_changes: []
 

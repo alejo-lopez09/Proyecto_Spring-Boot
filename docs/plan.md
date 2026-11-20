@@ -82,12 +82,12 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 6: Evidencia de aceptación y entrega
 
-- [ ] T029 [Cross-cutting] [Plan:6.1] Ejecutar los 14 escenarios en H2 o MySQL y registrar respuesta y código.
-- [ ] T030 [Cross-cutting] [Plan:6.2] Completar `docs/CoworkHub.postman_collection.json` con usuarios, token y carpeta de escenarios.
-- [ ] T031 [Cross-cutting] [Plan:6.3] Actualizar `README.md` con MySQL/Docker, ejecución, usuarios, Swagger y pruebas.
-- [ ] T032 [Cross-cutting] [Plan:6.4] Revisar `docs/analisis.md` para trazabilidad y supuestos.
-- [ ] T033 [Cross-cutting] [Plan:6.5] Ejecutar `mvnw test` y `mvnw package`, corregir fallas y conservar la salida verde.
-- [ ] T034 [Cross-cutting] [Plan:6.6] Preparar evidencia final de commits, diff y archivos entregables.
+- [x] T029 [Cross-cutting] [Plan:6.1] Ejecutar los 14 escenarios en H2 o MySQL y registrar respuesta y código.
+- [x] T030 [Cross-cutting] [Plan:6.2] Completar `docs/CoworkHub.postman_collection.json` con usuarios, token y carpeta de escenarios.
+- [x] T031 [Cross-cutting] [Plan:6.3] Actualizar `README.md` con MySQL/Docker, ejecución, usuarios, Swagger y pruebas.
+- [x] T032 [Cross-cutting] [Plan:6.4] Revisar `docs/analisis.md` para trazabilidad y supuestos.
+- [x] T033 [Cross-cutting] [Plan:6.5] Ejecutar `mvnw test` y `mvnw package`, corregir fallas y conservar la salida verde.
+- [x] T034 [Cross-cutting] [Plan:6.6] Preparar evidencia final de commits, diff y archivos entregables.
 
 ## Secuencia de commits
 

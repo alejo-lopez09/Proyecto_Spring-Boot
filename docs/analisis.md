@@ -53,6 +53,25 @@ El proyecto implementa una API REST para sedes, salas, equipamiento, servicios, 
 
 Además se mantienen las trazas RF-01 a RF-15 y RN-01 a RN-13 documentadas en `docs/plan.md`.
 
+## Evidencia final de aceptación
+
+| Escenario | Evidencia automatizada | Estado |
+|---|---|---|
+| 1. Reserva con dos servicios | `CoworkingApiTests.calculatesFrozenServiceCostsAndFiltersAvailability` | Cubierto |
+| 2. Solapamiento | `roomBookingRejectsOverlapAndAcceptsAdjacentTime` | Cubierto |
+| 3. Reserva contigua | `roomBookingRejectsOverlapAndAcceptsAdjacentTime` | Cubierto |
+| 4. Duración/horario inválido | `validatesBookingDurationAsBusinessConflict`, `rejectsInvalidBookingDurationsAndOutsideLocationHours` | Cubierto |
+| 5. Cancelación más de 24 h | `cancellationAtOrBeyondTwentyFourHoursIsFree` | Cubierto |
+| 6. Cancelación a 5 h | `cancellationWithinTwentyFourHoursChargesHalfTheRoomPrice` | Cubierto |
+| 7. Cancelación a 1 h | `cancellationLessThanTwoHoursBeforeStartIsRejected` | Cubierto |
+| 8. Confirmar cancelada | `cancelledBookingCannotBeConfirmedOrCompleted`, prueba HTTP `rejectsConfirmOfCancelledBookingAndServiceChangeAfterConfirmation` | Cubierto |
+| 9. MEMBER consulta reserva ajena | `protectsPrivateRoutesAndEnforcesMemberOwnership` | Cubierto |
+| 10. Sin token o token alterado | `protectsPrivateRoutesAndEnforcesMemberOwnership`, `rejectsTamperedJwtAndPublishesOpenApi` | Cubierto |
+| 11. Eliminar sala con reservas | `filtersSuspendedMembersAndRejectsCatalogDuplicatesAndInUseDeletes` | Cubierto |
+| 12. Sede sin nombre | Validación Bean Validation en `LocationRequest.name` y `CoworkingApiTests.mapsMissingResourcesAndInvalidParametersToErrorEnvelope` | Cubierto |
+| 13. Solicitudes concurrentes | Bloqueo pesimista `RoomRepository.findByIdForUpdate` y relectura RN-01 | Implementado; sin MySQL/Docker físico no se ejecutó concurrencia real |
+| 14. Filtrar miembros suspendidos | `filtersSuspendedMembersAndRejectsCatalogDuplicatesAndInUseDeletes` | Cubierto |
+
 ## Baseline
 
 Comando: `.\mvnw.cmd test`
