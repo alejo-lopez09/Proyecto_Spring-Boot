@@ -73,12 +73,12 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 5: Seguridad, errores y Swagger
 
-- [ ] T023 [G4] [Plan:5.1] Verificar el flujo `/auth/login`, JWT de 3600 segundos y `/auth/perfil`.
-- [ ] T024 [G4] [Plan:5.2] Verificar BCrypt, `401 NO_AUTENTICADO` y `403 ACCESO_DENEGADO` en los manejadores.
-- [ ] T025 [G4] [Plan:5.3] Revisar ownership en `AccessControl.java` y `@PreAuthorize` de todos los controladores.
-- [ ] T026 [G4] [Plan:5.4] Verificar que `ApiExceptionHandler.java` traduce validaciones, 404, 405, duplicados y errores de negocio.
-- [ ] T027 [G4] [Plan:5.5] Actualizar OpenAPI, ejemplos, esquemas y botón Authorize.
-- [ ] T028 [G4] [Plan:5.6] Exportar y validar `docs/openapi.json`.
+- [x] T023 [G4] [Plan:5.1] Verificar el flujo `/auth/login`, JWT de 3600 segundos y `/auth/perfil`.
+- [x] T024 [G4] [Plan:5.2] Verificar BCrypt, `401 NO_AUTENTICADO` y `403 ACCESO_DENEGADO` en los manejadores.
+- [x] T025 [G4] [Plan:5.3] Revisar ownership en `AccessControl.java` y `@PreAuthorize` de todos los controladores.
+- [x] T026 [G4] [Plan:5.4] Verificar que `ApiExceptionHandler.java` traduce validaciones, 404, 405, duplicados y errores de negocio.
+- [x] T027 [G4] [Plan:5.5] Actualizar OpenAPI, ejemplos, esquemas y botón Authorize.
+- [x] T028 [G4] [Plan:5.6] Exportar y validar `docs/openapi.json`.
 
 ### Paso 6: Evidencia de aceptación y entrega
 

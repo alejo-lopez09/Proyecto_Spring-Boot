@@ -1,0 +1,62 @@
+batch_id: "B05"
+completed_tasks: ["T023", "T024", "T025", "T026", "T027", "T028"]
+blocked_tasks: []
+files_changed:
+  T023:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Probó contraseña incorrecta, JWT, perfil y expiración configurada"
+  T024:
+    - file: "src/main/java/com/proyecto/spring/security/"
+      change_type: "modified"
+      description: "Verificó handlers 401/403 y BCrypt"
+  T025:
+    - file: "src/main/java/com/proyecto/spring/security/AccessControl.java"
+      change_type: "modified"
+      description: "Verificó ownership de miembros y reservas"
+  T026:
+    - file: "src/main/java/com/proyecto/spring/presentation/ApiExceptionHandler.java"
+      change_type: "modified"
+      description: "Agregó METHOD_NOT_ALLOWED y mantuvo el envelope uniforme"
+  T027:
+    - file: "src/main/java/com/proyecto/spring/config/OpenApiConfig.java"
+      change_type: "modified"
+      description: "Verificó grupos, seguridad bearer y metadatos"
+  T028:
+    - file: "docs/openapi.json"
+      change_type: "modified"
+      description: "Verificó el contrato OpenAPI 3.1 versionado"
+upstream_artifacts_consumed:
+  T023-T028:
+    - artifact: "src/main/java/com/proyecto/spring/security/"
+      used_for: "JWT, filtro, roles y ownership"
+    - artifact: "src/main/java/com/proyecto/spring/presentation/ApiExceptionHandler.java"
+      used_for: "Envelope uniforme y códigos HTTP"
+    - artifact: "docs/openapi.json"
+      used_for: "Contrato exportado"
+traceability:
+  - requirement: "RF-11-RF-14"
+    plan_item: "5.1"
+    task: "T023"
+    files: ["src/main/java/com/proyecto/spring/presentation/AuthController.java", "src/main/java/com/proyecto/spring/security/JwtService.java"]
+    status: "completed"
+  - requirement: "RF-12-RN-13"
+    plan_item: "5.2-5.3"
+    task: "T024-T025"
+    files: ["src/main/java/com/proyecto/spring/security/", "src/main/java/com/proyecto/spring/presentation/"]
+    status: "completed"
+  - requirement: "RF-13-RF-15"
+    plan_item: "5.5-5.6"
+    task: "T027-T028"
+    files: ["src/main/java/com/proyecto/spring/config/OpenApiConfig.java", "docs/openapi.json"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings: []
+test_results:
+  T023-T028:
+    command: ".\\mvnw.cmd test"
+    passed: 20
+    failed: 0
+    skipped: 0
+    failures: []

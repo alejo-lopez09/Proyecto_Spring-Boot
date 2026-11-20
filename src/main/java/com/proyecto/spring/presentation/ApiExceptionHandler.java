@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.time.Clock;
@@ -50,6 +51,10 @@ public class ApiExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     ResponseEntity<ErrorResponse> notFound(NoResourceFoundException ex) {
         return response(HttpStatus.NOT_FOUND, "Recurso no encontrado", "NOT_FOUND");
+    }
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<ErrorResponse> methodNotAllowed(HttpRequestMethodNotSupportedException ex) {
+        return response(HttpStatus.METHOD_NOT_ALLOWED, "Método HTTP no permitido", "METHOD_NOT_ALLOWED");
     }
     @ExceptionHandler(Exception.class)
     ResponseEntity<ErrorResponse> unexpected(Exception ex) {

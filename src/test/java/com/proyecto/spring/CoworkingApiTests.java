@@ -78,6 +78,27 @@ class CoworkingApiTests {
     }
 
     @Test
+    void rejectsWrongPasswordAndReturnsJwtProfileAndForbiddenRoles() throws Exception {
+        mvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"ana\",\"password\":\"wrong-password\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.codigo").value("UNAUTHORIZED"));
+
+        String adminToken = loginAs("admin", "password");
+        mvc.perform(get("/auth/perfil").header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.usuario").value("admin"))
+                .andExpect(jsonPath("$.rol").value("ADMIN"))
+                .andExpect(jsonPath("$.miembroId").doesNotExist());
+
+        mvc.perform(post("/api/planes").header("Authorization", bearer())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Denied\",\"includedHoursPerMonth\":1,\"overageDiscount\":0,\"maxActiveBookings\":1}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.codigo").value("FORBIDDEN"));
+    }
+
+    @Test
     void mapsMissingResourcesAndInvalidParametersToErrorEnvelope() throws Exception {
         mvc.perform(get("/api/no-such-resource").header("Authorization", bearer()))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.codigo").value("NOT_FOUND"));
