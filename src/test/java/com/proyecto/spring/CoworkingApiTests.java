@@ -150,6 +150,31 @@ class CoworkingApiTests {
         org.junit.jupiter.api.Assertions.assertEquals(1, inactiveRooms.intValue());
     }
 
+    @Test
+    void filtersSuspendedMembersAndRejectsCatalogDuplicatesAndInUseDeletes() throws Exception {
+        String receptionistToken = loginAs("reception", "password");
+
+        mvc.perform(get("/api/miembros").param("estado", "SUSPENDED")
+                        .header("Authorization", "Bearer " + receptionistToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andExpect(jsonPath("$[0].id").value(4));
+
+        mvc.perform(post("/api/planes").header("Authorization", "Bearer " + loginAs("admin", "password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Starter\",\"includedHoursPerMonth\":10,\"overageDiscount\":0,\"maxActiveBookings\":5}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("RN-11"));
+
+        mvc.perform(delete("/api/sedes/1").header("Authorization", "Bearer " + loginAs("admin", "password")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("RN-12"));
+
+        mvc.perform(delete("/api/salas/1").header("Authorization", "Bearer " + loginAs("admin", "password")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("RN-12"));
+    }
+
     private void assertCount(String table, int expected) {
         Number count = (Number) entityManager.createNativeQuery("select count(*) from " + table)
                 .getSingleResult();

@@ -1,0 +1,65 @@
+batch_id: "B03"
+completed_tasks: ["T010", "T011", "T012", "T013", "T014"]
+blocked_tasks: []
+files_changed:
+  T010:
+    - file: "src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java"
+      change_type: "modified"
+      description: "Agregó verificaciones explícitas de unicidad"
+    - file: "src/main/java/com/proyecto/spring/persistence/RoomRepository.java"
+      change_type: "modified"
+      description: "Agregó consulta de nombre único por sede"
+  T011:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Probó el filtro de miembros suspendidos"
+  T012:
+    - file: "src/main/java/com/proyecto/spring/business/MemberServiceImpl.java"
+      change_type: "modified"
+      description: "Verificó la implementación existente de alta, suspensión y baja"
+  T013:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Verificó el consumo mensual"
+  T014:
+    - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+      change_type: "modified"
+      description: "Probó duplicados, filtro suspendido y recursos en uso"
+upstream_artifacts_consumed:
+  T010:
+    - artifact: "src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java"
+      used_for: "CRUD y protección RN-11/RN-12"
+  T011-T014:
+    - artifact: "src/main/java/com/proyecto/spring/business/MemberServiceImpl.java"
+      used_for: "Gestión de miembros y consumo"
+traceability:
+  - requirement: "RF-01"
+    plan_item: "3.1"
+    task: "T010"
+    files: ["src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java", "src/main/java/com/proyecto/spring/persistence/RoomRepository.java"]
+    status: "completed"
+  - requirement: "RF-02"
+    plan_item: "3.2-3.3"
+    task: "T011-T012"
+    files: ["src/main/java/com/proyecto/spring/business/MemberServiceImpl.java", "src/test/java/com/proyecto/spring/CoworkingApiTests.java"]
+    status: "completed"
+  - requirement: "RF-10"
+    plan_item: "3.4"
+    task: "T013"
+    files: ["src/main/java/com/proyecto/spring/business/MemberServiceImpl.java"]
+    status: "completed"
+  - requirement: "RN-11-RN-12"
+    plan_item: "3.1-3.5"
+    task: "T010-T014"
+    files: ["src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java", "src/test/java/com/proyecto/spring/CoworkingApiTests.java"]
+    status: "completed"
+protocol_violation: false
+errors: []
+warnings: []
+test_results:
+  T010-T014:
+    command: ".\\mvnw.cmd test"
+    passed: 15
+    failed: 0
+    skipped: 0
+    failures: []

@@ -37,6 +37,10 @@ public class CatalogServiceImpl implements CatalogService {
     public LocationResponse saveLocation(Long id, LocationRequest request) {
         if (!request.closingTime().isAfter(request.openingTime())) throw BusinessException.badRequest("El cierre debe ser posterior a la apertura");
         Location entity = id == null ? new Location(request.name(), request.city(), request.address(), request.openingTime(), request.closingTime()) : require(locations.findById(id), "Sede");
+        if (locations.existsByNameIgnoreCase(request.name()) &&
+                (id == null || !entity.getName().equalsIgnoreCase(request.name()))) {
+            throw BusinessException.conflict("El nombre de la sede ya existe", "RN-11");
+        }
         entity.setName(request.name()); entity.setCity(request.city()); entity.setAddress(request.address());
         entity.setOpeningTime(request.openingTime()); entity.setClosingTime(request.closingTime());
         return dto(locations.save(entity));
@@ -58,6 +62,10 @@ public class CatalogServiceImpl implements CatalogService {
     public RoomResponse saveRoom(Long id, RoomRequest request) {
         Location location = require(locations.findById(request.sedeId()), "Sede");
         Room room = id == null ? new Room(request.name(), request.type(), request.capacity(), request.hourlyRate(), request.active(), location) : require(rooms.findDetailedById(id), "Sala");
+        if (rooms.existsByNameIgnoreCaseAndLocationId(request.name(), location.getId()) &&
+                (id == null || !room.getName().equalsIgnoreCase(request.name()) || !room.getLocation().getId().equals(location.getId()))) {
+            throw BusinessException.conflict("Ya existe una sala con ese nombre en la sede", "RN-11");
+        }
         room.setName(request.name()); room.setType(request.type()); room.setCapacity(request.capacity());
         room.setHourlyRate(request.hourlyRate()); room.setActive(request.active()); room.setLocation(location);
         Set<Equipment> assigned = request.equipamientoIds() == null ? Set.of() : request.equipamientoIds().stream()
@@ -82,6 +90,10 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public EquipmentResponse saveEquipment(Long id, EquipmentRequest request) {
         Equipment entity = id == null ? new Equipment(request.name()) : require(equipment.findById(id), "Equipamiento");
+        if (equipment.existsByNameIgnoreCase(request.name()) &&
+                (id == null || !entity.getName().equalsIgnoreCase(request.name()))) {
+            throw BusinessException.conflict("El nombre del equipamiento ya existe", "RN-11");
+        }
         entity.setName(request.name());
         return dto(equipment.save(entity));
     }
@@ -99,6 +111,10 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public ServiceResponse saveService(Long id, ServiceRequest request) {
         AdditionalService entity = id == null ? new AdditionalService(request.name(), request.unitPrice()) : require(services.findById(id), "Servicio adicional");
+        if (services.existsByNameIgnoreCase(request.name()) &&
+                (id == null || !entity.getName().equalsIgnoreCase(request.name()))) {
+            throw BusinessException.conflict("El nombre del servicio ya existe", "RN-11");
+        }
         entity.setName(request.name()); entity.setUnitPrice(request.unitPrice());
         return dto(services.save(entity));
     }
@@ -116,6 +132,10 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public PlanResponse savePlan(Long id, PlanRequest request) {
         MembershipPlan entity = id == null ? new MembershipPlan(request.name(), request.includedHoursPerMonth(), request.overageDiscount(), request.maxActiveBookings()) : require(plans.findById(id), "Plan");
+        if (plans.existsByNameIgnoreCase(request.name()) &&
+                (id == null || !entity.getName().equalsIgnoreCase(request.name()))) {
+            throw BusinessException.conflict("El nombre del plan ya existe", "RN-11");
+        }
         entity.setName(request.name()); entity.setIncludedHoursPerMonth(request.includedHoursPerMonth());
         entity.setOverageDiscount(request.overageDiscount()); entity.setMaxActiveBookings(request.maxActiveBookings());
         return dto(plans.save(entity));

@@ -54,11 +54,11 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 ### Paso 3: Catálogos y miembros
 
-- [ ] T010 [G2] [Plan:3.1] Completar CRUD, validaciones y respuestas de catálogos en `CatalogController.java` y `CatalogServiceImpl.java`.
-- [ ] T011 [G2] [Plan:3.2] Implementar o verificar filtros por nombre y estado y paginación de miembros.
-- [ ] T012 [G2] [Plan:3.3] Completar registro simultáneo Member/UserAccount, suspensión, activación y eliminación RN-12.
-- [ ] T013 [G2] [Plan:3.4] Resolver la propiedad mensual de consumo en `MemberServiceImpl.java`.
-- [ ] T014 [G2] [Plan:3.5] Añadir pruebas HTTP para estados suspendido, filtros y reglas de acceso.
+- [x] T010 [G2] [Plan:3.1] Completar CRUD, validaciones y respuestas de catálogos en `CatalogController.java` y `CatalogServiceImpl.java`.
+- [x] T011 [G2] [Plan:3.2] Implementar o verificar filtros por nombre y estado y paginación de miembros.
+- [x] T012 [G2] [Plan:3.3] Completar registro simultáneo Member/UserAccount, suspensión, activación y eliminación RN-12.
+- [x] T013 [G2] [Plan:3.4] Resolver la propiedad mensual de consumo en `MemberServiceImpl.java`.
+- [x] T014 [G2] [Plan:3.5] Añadir pruebas HTTP para estados suspendido, filtros y reglas de acceso.
 
 ### Paso 4: Reglas de reservas
 

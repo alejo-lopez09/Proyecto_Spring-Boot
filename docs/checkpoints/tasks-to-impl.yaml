@@ -6,12 +6,121 @@ metadata:
 
 summary:
   total_tasks: 34
-  completed_tasks: 9
+  completed_tasks: 14
   in_progress_tasks: 0
-  pending_tasks: 25
-  completion_percentage: 26.5
+  pending_tasks: 20
+  completion_percentage: 41.2
 
 tasks:
+  - task_id: "T010"
+    description: "Completar CRUD y unicidad de catálogos"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java"
+          changes:
+            - change_type: "modified"
+              description: "Agregó unicidad explícita RN-11 para ubicación, sala, equipo, servicio y plan"
+        - file: "src/main/java/com/proyecto/spring/persistence/RoomRepository.java"
+          changes:
+            - change_type: "modified"
+              description: "Agregó consulta de unicidad sala/nombre/sede"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 15
+        failed: 0
+        skipped: 0
+        failures: []
+    upstream_trace:
+      plan_item: "3.1"
+      requirements: ["RF-01", "RN-11", "RN-12"]
+
+  - task_id: "T011"
+    description: "Verificar filtros de miembros"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+          changes:
+            - change_type: "modified"
+              description: "Probó filtro estado=SUSPENDED"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 15
+        failed: 0
+        skipped: 0
+        failures: []
+    upstream_trace:
+      plan_item: "3.2"
+      requirements: ["RF-02"]
+
+  - task_id: "T012"
+    description: "Completar gestión de miembros RN-12"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/main/java/com/proyecto/spring/business/CatalogServiceImpl.java"
+          changes:
+            - change_type: "modified"
+              description: "Verificó eliminaciones protegidas de catálogos"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 15
+        failed: 0
+        skipped: 0
+        failures: []
+    upstream_trace:
+      plan_item: "3.3"
+      requirements: ["RF-02", "RN-12"]
+
+  - task_id: "T013"
+    description: "Verificar consumo mensual"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+          changes:
+            - change_type: "modified"
+              description: "Ejecuta consulta de consumo mensual"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 15
+        failed: 0
+        skipped: 0
+        failures: []
+    upstream_trace:
+      plan_item: "3.4"
+      requirements: ["RF-10", "RN-07"]
+
+  - task_id: "T014"
+    description: "Agregar pruebas HTTP de filtros y reglas"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "src/test/java/com/proyecto/spring/CoworkingApiTests.java"
+          changes:
+            - change_type: "modified"
+              description: "Agregó prueba de miembros suspendidos, duplicados y recursos en uso"
+    verification:
+      build_passed: true
+      test_results:
+        command: ".\\mvnw.cmd test"
+        passed: 15
+        failed: 0
+        skipped: 0
+        failures: []
+    upstream_trace:
+      plan_item: "3.5"
+      requirements: ["RF-01", "RF-02", "RN-11", "RN-12"]
+
   - task_id: "T005"
     description: "Verificar relaciones JPA, fetch, cascade y orphanRemoval"
     status: "completed"
@@ -202,8 +311,8 @@ tasks:
       full_trace: "Escenarios de aceptación -> Paso 1.4 -> T004 -> docs/analisis.md"
 
 pending_tasks:
-  - task_id: "T010"
-    description: "Completar CRUD y validaciones de catálogos"
+  - task_id: "T015"
+    description: "Consolidar validaciones RN-02, RN-03 y RN-04"
     blocked_by: []
     priority: "P1"
 
