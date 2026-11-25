@@ -69,7 +69,7 @@ Además se mantienen las trazas RF-01 a RF-15 y RN-01 a RN-13 documentadas en `d
 | 10. Sin token o token alterado | `protectsPrivateRoutesAndEnforcesMemberOwnership`, `rejectsTamperedJwtAndPublishesOpenApi` | Cubierto |
 | 11. Eliminar sala con reservas | `filtersSuspendedMembersAndRejectsCatalogDuplicatesAndInUseDeletes` | Cubierto |
 | 12. Sede sin nombre | Validación Bean Validation en `LocationRequest.name` y `CoworkingApiTests.mapsMissingResourcesAndInvalidParametersToErrorEnvelope` | Cubierto |
-| 13. Solicitudes concurrentes | Bloqueo pesimista `RoomRepository.findByIdForUpdate` y relectura RN-01 | Implementado; sin MySQL/Docker físico no se ejecutó concurrencia real |
+| 13. Solicitudes concurrentes | Bloqueo pesimista `RoomRepository.findByIdForUpdate` y relectura RN-01 | Implementado; las pruebas MySQL no enviaron requests simultáneos |
 | 14. Filtrar miembros suspendidos | `filtersSuspendedMembersAndRejectsCatalogDuplicatesAndInUseDeletes` | Cubierto |
 
 ## Baseline
@@ -83,4 +83,13 @@ Resultado inicial: 13 pruebas ejecutadas, 13 aprobadas, 0 fallidas, 0 omitidas.
 - `CoworkingApiTests.importsRequiredSeedEntityCountsAndRelations` confirmó los mínimos de sedes, salas, equipos, planes, servicios, miembros, cuentas, reservas y detalles.
 - También confirmó una sala inactiva y un miembro suspendido.
 - Las 10 pruebas de `CoworkingApiTests` pasan.
-- Docker no está ejecutándose en el entorno actual, por lo que el arranque físico con MySQL no pudo verificarse en este lote; la configuración Maven/H2 sí creó el esquema y importó los datos.
+- Docker no estaba ejecutándose durante este lote inicial, por lo que el arranque físico con MySQL no pudo verificarse entonces; la configuración Maven/H2 sí creó el esquema e importó los datos.
+
+## Revalidación MySQL — 2026-11-24
+
+- Docker 29.9.3 y el contenedor `mysql-academia` están activos; MySQL 8.0.46 publica el puerto 3308 y acepta conexión a `academia`.
+- `ApplicationTests` pasó con el contexto Spring/JPA conectado a MySQL, con `ddl-auto=update`.
+- Se ejecutaron 12 pruebas API de `CoworkingApiTests` mediante MockMvc sobre MySQL: 12 aprobadas, 0 fallidas, 0 omitidas. Se excluyeron los tests que exigen conteos exactos del seed, ya que la base conserva una reserva adicional.
+- Los conteos de cuentas, reservas y detalles se mantuvieron en 4, 16 y 4 antes y después. Las pruebas API de la clase usan transacciones revertidas.
+- La API no quedó escuchando en el puerto 8080. No se ejecutó la colección Postman completa ni la prueba de dos requests simultáneos; el bloqueo MySQL real sigue pendiente de evidencia concurrente.
+- Ver [informe de validación de ejecución](./runtime-validation-report.md) para el detalle de comandos y resultados.
