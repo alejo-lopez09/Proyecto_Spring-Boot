@@ -23,9 +23,6 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "membership_plan_id", nullable = false)
     private MembershipPlan plan;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_account_id", unique = true)
-    private UserAccount userAccount;
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Booking> bookings = new ArrayList<>();
 
@@ -45,6 +42,4 @@ public class Member {
     public void setStatus(MemberStatus status) { this.status = status; }
     public MembershipPlan getPlan() { return plan; }
     public void setPlan(MembershipPlan plan) { this.plan = plan; }
-    public UserAccount getUserAccount() { return userAccount; }
-    public void setUserAccount(UserAccount userAccount) { this.userAccount = userAccount; }
 }

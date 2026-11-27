@@ -2,7 +2,7 @@
 
 ## Resumen
 
-Completar y validar el proyecto existente contra el enunciado de CoworkHub. El repositorio ya contiene entidades JPA, servicios, controladores, seguridad JWT, datos semilla, Swagger y una base de pruebas; el trabajo restante debe centrarse en cerrar brechas, verificar las reglas RN-01 a RN-13 y producir la evidencia final de los 14 escenarios.
+Plan histórico de implementación de CoworkHub. La aplicación actual conserva entidades JPA, servicios, controladores, datos semilla, Swagger, frontend web y pruebas; las rutas son públicas y se retiraron las cuentas de acceso.
 
 Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
@@ -12,7 +12,7 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 - Maven
 - MySQL 8 en ejecución; H2 aislada para pruebas
 - Spring Data JPA, Hibernate, Bean Validation y OpenAPI
-- Spring Security 6/7 con JWT, BCrypt y autorización por rol y dueño
+- Interfaz HTML, CSS y JavaScript servida desde Spring Boot
 - Arquitectura: presentation -> business -> persistence -> domain
 - Hora controlada mediante `Clock`
 - Respuestas de error uniformes mediante `ApiExceptionHandler`
@@ -21,7 +21,7 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 - Mantener la arquitectura por capas y la separación entre entidades DTO.
 - Usar transacciones en operaciones de escritura y bloqueos pesimistas donde se proteja concurrencia.
-- Mantener RN-01 a RN-13 como reglas verificables con códigos de error definidos.
+- Mantener RN-01 a RN-12 como reglas verificables con códigos de error definidos.
 - Prohibir reglas de negocio con respuestas 500 o entidades JPA expuestas.
 - Preservar los datos semilla y el contrato público documentado.
 - Validar cada fase con la menor suite que cubra el cambio y ejecutar `mvnw test` al cerrar.
@@ -30,9 +30,8 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 - Spring: servicios como interfaz más implementación; controladores REST ligeros; constructor injection.
 - JPA: relaciones con lado dueño explícito, colecciones LAZY, transacciones y bloqueo pesimista para reservas.
-- REST: 200/201 para éxito, 400 validación, 401 autenticación, 403 autorización, 404 recurso inexistente y 409 regla de negocio.
+- REST: 200/201 para éxito, 400 validación, 404 recurso inexistente y 409 regla de negocio.
 - Concurrencia: bloquear la sala dentro de la transacción y repetir la comprobación de solapamiento antes de guardar.
-- Seguridad: estado stateless, BCrypt, JWT de 3600 segundos y métodos `@PreAuthorize`.
 - Pruebas: H2 sin MySQL, `Clock` fijo y pruebas de aceptación HTTP.
 
 ## Fases e implementación
@@ -56,7 +55,7 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 
 - [x] T010 [G2] [Plan:3.1] Completar CRUD, validaciones y respuestas de catálogos en `CatalogController.java` y `CatalogServiceImpl.java`.
 - [x] T011 [G2] [Plan:3.2] Implementar o verificar filtros por nombre y estado y paginación de miembros.
-- [x] T012 [G2] [Plan:3.3] Completar registro simultáneo Member/UserAccount, suspensión, activación y eliminación RN-12.
+- [x] T012 [G2] [Plan:3.3] Completar registro de miembros, suspensión, activación y eliminación RN-12.
 - [x] T013 [G2] [Plan:3.4] Resolver la propiedad mensual de consumo en `MemberServiceImpl.java`.
 - [x] T014 [G2] [Plan:3.5] Añadir pruebas HTTP para estados suspendido, filtros y reglas de acceso.
 
@@ -71,20 +70,20 @@ Estado inicial comprobado: `mvnw test` ejecuta 13 pruebas y todas pasan.
 - [x] T021 [G3] [Plan:4.7] Completar disponibilidad por sede, capacidad y equipamientos RF-03.
 - [x] T022 [G3] [Plan:4.8] Añadir pruebas específicas para reservas simultáneas con dos hilos/transacciones.
 
-### Paso 5: Seguridad, errores y Swagger
+### Paso 5: API, errores y Swagger
 
-- [x] T023 [G4] [Plan:5.1] Verificar el flujo `/auth/login`, JWT de 3600 segundos y `/auth/perfil`.
-- [x] T024 [G4] [Plan:5.2] Verificar BCrypt, `401 NO_AUTENTICADO` y `403 ACCESO_DENEGADO` en los manejadores.
-- [x] T025 [G4] [Plan:5.3] Revisar ownership en `AccessControl.java` y `@PreAuthorize` de todos los controladores.
+- [x] T023 [G4] [Plan:5.1] Verificar que la API de negocio esté disponible sin sesión.
+- [x] T024 [G4] [Plan:5.2] Verificar las respuestas de error en los manejadores.
+- [x] T025 [G4] [Plan:5.3] Revisar el contrato público de los controladores.
 - [x] T026 [G4] [Plan:5.4] Verificar que `ApiExceptionHandler.java` traduce validaciones, 404, 405, duplicados y errores de negocio.
-- [x] T027 [G4] [Plan:5.5] Actualizar OpenAPI, ejemplos, esquemas y botón Authorize.
+- [x] T027 [G4] [Plan:5.5] Actualizar OpenAPI y sus esquemas.
 - [x] T028 [G4] [Plan:5.6] Exportar y validar `docs/openapi.json`.
 
 ### Paso 6: Evidencia de aceptación y entrega
 
 - [x] T029 [Cross-cutting] [Plan:6.1] Ejecutar los 14 escenarios en H2 o MySQL y registrar respuesta y código.
-- [x] T030 [Cross-cutting] [Plan:6.2] Completar `docs/CoworkHub.postman_collection.json` con usuarios, token y carpeta de escenarios.
-- [x] T031 [Cross-cutting] [Plan:6.3] Actualizar `README.md` con MySQL/Docker, ejecución, usuarios, Swagger y pruebas.
+- [x] T030 [Cross-cutting] [Plan:6.2] Completar `docs/CoworkHub.postman_collection.json` con los escenarios públicos.
+- [x] T031 [Cross-cutting] [Plan:6.3] Actualizar `README.md` con MySQL, ejecución, interfaz, Swagger y pruebas.
 - [x] T032 [Cross-cutting] [Plan:6.4] Revisar `docs/analisis.md` para trazabilidad y supuestos.
 - [x] T033 [Cross-cutting] [Plan:6.5] Ejecutar `mvnw test` y `mvnw package`, corregir fallas y conservar la salida verde.
 - [x] T034 [Cross-cutting] [Plan:6.6] Preparar evidencia final de commits, diff y archivos entregables.
@@ -117,10 +116,7 @@ Los commits deben incluir el prefijo histórico del repositorio y excluir archiv
 | RF-08 | Cancelar reserva | 4 | `BookingServiceImpl.cancel` |
 | RF-09 | Completar reserva | 4 | `BookingServiceImpl.complete` |
 | RF-10 | Consumo mensual | 3 | `MemberServiceImpl` |
-| RF-11 | Login JWT | 5 | `AuthController.login`, `JwtService` |
-| RF-12 | JWT y permisos por rol/dueño | 5 | `SecurityConfig`, `AccessControl` |
 | RF-13 | Swagger | 5 | `OpenApiConfig`, `docs/openapi.json` |
-| RF-14 | Perfil autenticado | 5 | `AuthController.profile` |
 | RF-15 | Health público | 5 | Actuator y `application.properties` |
 | RN-01 | Anti-solapamiento concurrente | 4 | bloqueo de sala y comprobación dentro de transacción |
 | RN-02 | Duración y mismo día | 4 | `validateBookingWindow` |
@@ -134,4 +130,3 @@ Los commits deben incluir el prefijo histórico del repositorio y excluir archiv
 | RN-10 | Servicios solo en PENDING | 4 | add/remove service |
 | RN-11 | Unicidad | 2, 3 | restricciones JPA/SQL y validación de servicio |
 | RN-12 | Recursos en uso | 2, 3 | comprobaciones antes de DELETE |
-| RN-13 | Permisos por rol | 5 | `@PreAuthorize` y `AccessControl` |

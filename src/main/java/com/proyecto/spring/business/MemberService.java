@@ -14,5 +14,4 @@ public interface MemberService {
     MemberResponse activate(Long id);
     void delete(Long id);
     ConsumptionResponse consumption(Long id, YearMonth month);
-    Long memberIdForUsername(String username);
 }

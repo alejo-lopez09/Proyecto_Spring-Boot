@@ -31,9 +31,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public BookingResponse create(BookingCreateRequest request, String username, String role) {
+    public BookingResponse create(BookingCreateRequest request) {
         Member member = requireMemberLocked(request.miembroId());
-        authorizeMember(member, username, role);
         Room room = rooms.findByIdForUpdate(request.salaId()).orElseThrow(() -> BusinessException.notFound("Sala no encontrada"));
         validateBookingWindow(request.startTime(), request.endTime(), room, request.attendees());
         if (member.getStatus() != MemberStatus.ACTIVE) throw BusinessException.conflict("El miembro está suspendido", "RN-05");
@@ -59,14 +58,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse get(Long id) { return dto(requireDetailed(id)); }
 
     @Override @Transactional(readOnly = true)
-    public List<BookingResponse> search(Long memberId, Long roomId, LocalDate date, BookingStatus status, String username, String role) {
+    public List<BookingResponse> search(Long memberId, Long roomId, LocalDate date, BookingStatus status) {
         if (memberId == null && roomId == null && date == null && status == null) throw BusinessException.badRequest("Debe indicar un filtro");
-        if (role.equals("MEMBER")) {
-            Long ownMemberId = members.findByUserAccountUsername(username).map(Member::getId)
-                    .orElseThrow(() -> BusinessException.forbidden("La cuenta no corresponde a un miembro"));
-            if (memberId != null && !memberId.equals(ownMemberId)) throw BusinessException.forbidden("No puede consultar las reservas de otro miembro");
-            memberId = ownMemberId;
-        }
         if (roomId != null && date == null) throw BusinessException.badRequest("La búsqueda por sala requiere fecha");
         LocalDateTime dayStart = date == null ? LocalDate.EPOCH.atStartOfDay() : date.atStartOfDay();
         LocalDateTime dayEnd = date == null ? LocalDate.EPOCH.plusDays(1).atStartOfDay() : date.plusDays(1).atStartOfDay();
@@ -174,11 +167,6 @@ public class BookingServiceImpl implements BookingService {
     }
     private Member requireMemberLocked(Long id) {
         return members.findByIdForUpdate(id).orElseThrow(() -> BusinessException.notFound("Miembro no encontrado"));
-    }
-    private void authorizeMember(Member member, String username, String role) {
-        if (role.equals("MEMBER") && (member.getUserAccount() == null || !member.getUserAccount().getUsername().equals(username))) {
-            throw BusinessException.forbidden("Solo puede reservar a su propio nombre");
-        }
     }
     private Booking requireDetailed(Long id) {
         return bookings.findDetailedById(id).orElseThrow(() -> BusinessException.notFound("Reserva no encontrada"));

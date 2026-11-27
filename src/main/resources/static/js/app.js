@@ -1,8 +1,6 @@
 const app = document.querySelector("#app");
 const toast = document.querySelector("#toast");
 const state = {
-  token: sessionStorage.getItem("coworkhub-token"),
-  profile: null,
   activePage: "inicio",
   locations: [],
   rooms: [],
@@ -40,8 +38,6 @@ const money = (value) => new Intl.NumberFormat("es-AR", {
 }).format(Number(value || 0));
 const dateLabel = (value, options = { day: "numeric", month: "short" }) =>
   new Intl.DateTimeFormat("es", options).format(new Date(value));
-const isStaff = () => ["ADMIN", "RECEPTIONIST"].includes(state.profile?.rol);
-const initials = (name) => String(name || "?").slice(0, 2).toUpperCase();
 
 function showToast(message, isError = false) {
   toast.textContent = message;
@@ -53,13 +49,8 @@ function showToast(message, isError = false) {
 
 async function api(path, options = {}) {
   const headers = new Headers(options.headers || {});
-  if (state.token) headers.set("Authorization", `Bearer ${state.token}`);
   if (options.body && !(options.body instanceof FormData)) headers.set("Content-Type", "application/json");
   const response = await fetch(path, { ...options, headers });
-  if (response.status === 401 && state.token) {
-    logout();
-    throw new Error("Tu sesión terminó. Inicia sesión nuevamente.");
-  }
   if (!response.ok) {
     let message = `No se pudo completar la solicitud (${response.status}).`;
     try {
@@ -73,70 +64,6 @@ async function api(path, options = {}) {
   return body ? JSON.parse(body) : null;
 }
 
-function renderLogin(error = "") {
-  state.token = null;
-  state.profile = null;
-  app.innerHTML = `
-    <main class="login-screen">
-      <div class="login-layout">
-        <section class="login-intro">
-          <span class="brand-mark">C</span>
-          <h1>Tu espacio.<br><span>A tu ritmo.</span></h1>
-          <p>Encuentra el lugar perfecto para concentrarte, reunirte y hacer que tus ideas sucedan.</p>
-        </section>
-        <form class="login-card" id="login-form">
-          <h2>Qué bueno verte</h2>
-          <p>Ingresa a tu cuenta de CoworkHub</p>
-          ${error ? `<div class="inline-error" role="alert">${html(error)}</div><br>` : ""}
-          <div class="form-grid">
-            <div class="form-field full">
-              <label for="username">Usuario</label>
-              <input id="username" name="username" autocomplete="username" placeholder="Tu nombre de usuario" required>
-            </div>
-            <div class="form-field full">
-              <label for="password">Contraseña</label>
-              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required>
-            </div>
-            <div class="form-field full"><button class="button" type="submit">Ingresar <span aria-hidden="true">→</span></button></div>
-          </div>
-          <div class="login-tip">¿Es tu primera vez? Puedes probar con una cuenta de demostración: <strong>ana</strong>, <strong>admin</strong> o <strong>reception</strong> · contraseña: <strong>password</strong>.</div>
-        </form>
-      </div>
-    </main>`;
-  document.querySelector("#login-form").addEventListener("submit", login);
-}
-
-async function login(event) {
-  event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const button = event.currentTarget.querySelector("button");
-  button.disabled = true;
-  button.textContent = "Ingresando...";
-  try {
-    const result = await fetch("/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: form.get("username"), password: form.get("password") }),
-    });
-    const body = await result.json();
-    if (!result.ok) throw new Error(body.error || "Usuario o contraseña incorrectos.");
-    state.token = body.token;
-    sessionStorage.setItem("coworkhub-token", body.token);
-    state.profile = await api("/auth/perfil");
-    await loadWorkspace();
-  } catch (error) {
-    sessionStorage.removeItem("coworkhub-token");
-    renderLogin(error.message || "No se pudo conectar con el servidor.");
-  }
-}
-
-function logout() {
-  state.token = null;
-  state.profile = null;
-  sessionStorage.removeItem("coworkhub-token");
-  renderLogin();
-}
-
 async function loadWorkspace() {
   renderShell();
   const commonRequests = [
@@ -144,8 +71,8 @@ async function loadWorkspace() {
     api("/api/salas").then((value) => { state.rooms = value; }),
     api("/api/servicios-adicionales").then((value) => { state.services = value; }),
     api("/api/planes").then((value) => { state.plans = value; }),
+    api("/api/miembros").then((value) => { state.members = value; }),
   ];
-  if (isStaff()) commonRequests.push(api("/api/miembros").then((value) => { state.members = value; }));
   const results = await Promise.allSettled(commonRequests);
   const failed = results.find((result) => result.status === "rejected");
   if (failed) showToast(failed.reason.message, true);
@@ -160,7 +87,6 @@ function navButton(key, icon, title) {
 }
 
 function renderShell() {
-  const displayName = state.profile?.usuario || "Mi cuenta";
   app.innerHTML = `
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
@@ -176,11 +102,6 @@ function renderShell() {
         </nav>
         <div class="sidebar-bottom">
           <div class="help-card"><strong>¿Necesitas una mano?</strong><p>Tu equipo de recepción está para ayudarte a encontrar el espacio ideal.</p></div>
-          <div class="profile-chip">
-            <span class="avatar">${html(initials(displayName))}</span>
-            <div class="profile-copy"><strong>${html(displayName)}</strong><span>${html(roleLabel(state.profile?.rol))}</span></div>
-            <button class="logout-button" id="logout" title="Cerrar sesión" aria-label="Cerrar sesión">↗</button>
-          </div>
         </div>
       </aside>
       <section class="main-area">
@@ -193,12 +114,7 @@ function renderShell() {
     </div>
     <dialog id="booking-dialog"></dialog>`;
   app.querySelectorAll("[data-page]").forEach((button) => button.addEventListener("click", () => navigate(button.dataset.page)));
-  document.querySelector("#logout").addEventListener("click", logout);
   document.querySelector("#mobile-menu").addEventListener("click", () => document.querySelector("#sidebar").classList.toggle("open"));
-}
-
-function roleLabel(role) {
-  return ({ ADMIN: "Administrador", RECEPTIONIST: "Recepción", MEMBER: "Miembro" })[role] || "Coworker";
 }
 
 async function navigate(page) {
@@ -212,13 +128,12 @@ async function navigate(page) {
 
 async function loadReservations(date = today()) {
   const params = new URLSearchParams();
-  if (state.profile?.rol === "MEMBER") params.set("miembroId", state.profile.miembroId);
-  else params.set("fecha", date);
+  params.set("fecha", date);
   try {
     state.reservations = await api(`/api/reservas?${params}`);
   } catch (error) {
     state.reservations = [];
-    if (!error.message.includes("401")) showToast(error.message, true);
+    showToast(error.message, true);
   }
 }
 
@@ -240,11 +155,11 @@ function renderHeading(title, subtitle, action = "") {
 function reservationList(items, emptyText = "No hay reservas para mostrar.") {
   if (!items.length) return `<div class="empty-state"><span class="empty-icon">▤</span><strong>Todo despejado</strong><p>${html(emptyText)}</p></div>`;
   return `<div class="table-wrap"><table class="data-table">
-    <thead><tr><th>Espacio</th><th>Fecha y hora</th><th>${isStaff() ? "Miembro" : "Personas"}</th><th>Estado</th><th>Total</th></tr></thead>
+    <thead><tr><th>Espacio</th><th>Fecha y hora</th><th>Miembro</th><th>Estado</th><th>Total</th></tr></thead>
     <tbody>${items.map((item) => `<tr>
       <td><span class="table-primary">${html(item.sala)}</span></td>
       <td>${html(dateLabel(item.startTime, { day: "numeric", month: "short" }))} · ${html(String(item.startTime).slice(11, 16))}</td>
-      <td>${isStaff() ? html(item.miembro) : `${html(item.attendees)} personas`}</td>
+      <td>${html(item.miembro)}</td>
       <td><span class="status ${html(String(item.status).toLowerCase())}">${html(statusLabel(item.status))}</span></td>
       <td>${money(item.totalCost)}</td>
     </tr>`).join("")}</tbody>
@@ -259,10 +174,10 @@ function renderDashboard() {
   const active = state.reservations.filter((item) => ["PENDING", "CONFIRMED"].includes(item.status));
   const places = new Set(state.rooms.map((room) => room.sedeId)).size;
   const nextBooking = active.slice().sort((a, b) => a.startTime.localeCompare(b.startTime))[0];
-  return `${renderHeading(`Hola, ${html(state.profile?.usuario)} 👋`, "Tu próximo gran día empieza con un buen espacio.", `<button class="button" data-go="disponibilidad">＋ Reservar un espacio</button>`)}
+  return `${renderHeading("Bienvenido a CoworkHub 👋", "Encuentra el espacio ideal para tu próximo día de trabajo.", `<button class="button" data-go="disponibilidad">＋ Reservar un espacio</button>`)}
     <section class="stats-grid" aria-label="Resumen">
-      ${statCard("Tus reservas activas", active.length, "En curso o por confirmar", "▤")}
-      ${statCard(isStaff() ? "Miembros" : "Salas disponibles", isStaff() ? state.members.length : state.rooms.filter((room) => room.active).length, isStaff() ? "En la comunidad" : "Listas para reservar", "♙")}
+      ${statCard("Reservas activas", active.length, "En curso o por confirmar", "▤")}
+      ${statCard("Miembros", state.members.length, "En la comunidad", "♙")}
       ${statCard("Sedes", places, "Espacios para descubrir", "⌖")}
       ${statCard("Planes", state.plans.length, "Opciones para cada ritmo", "◇")}
     </section>
@@ -319,22 +234,22 @@ function renderRoomCards(rooms, search) {
 }
 
 function renderReservations() {
-  const filter = state.profile?.rol === "MEMBER" ? "" : `<form class="filter-row" id="booking-filter-form">
+  const filter = `<form class="filter-row" id="booking-filter-form">
       <div class="form-field"><label for="booking-date-filter">Filtrar por fecha</label><input id="booking-date-filter" type="date" value="${today()}"></div>
       <button class="button secondary" type="submit">Buscar</button>
     </form>`;
   const actions = state.reservations.map((item) => {
     const buttons = [];
-    if (isStaff() && item.status === "PENDING") buttons.push(`<button class="text-button" data-action="confirmar" data-id="${html(item.id)}">Confirmar</button>`);
+    if (item.status === "PENDING") buttons.push(`<button class="text-button" data-action="confirmar" data-id="${html(item.id)}">Confirmar</button>`);
     if (["PENDING", "CONFIRMED"].includes(item.status)) buttons.push(`<button class="text-button danger" data-action="cancelar" data-id="${html(item.id)}">Cancelar</button>`);
-    if (isStaff() && item.status === "CONFIRMED") buttons.push(`<button class="text-button" data-action="completar" data-id="${html(item.id)}">Completar</button>`);
-    return `<tr><td><span class="table-primary">${html(item.sala)}</span></td><td>${html(dateLabel(item.startTime, { day: "numeric", month: "short", year: "numeric" }))}</td><td>${html(String(item.startTime).slice(11, 16))}–${html(String(item.endTime).slice(11, 16))}</td><td>${isStaff() ? html(item.miembro) : `${html(item.attendees)} personas`}</td><td><span class="status ${html(String(item.status).toLowerCase())}">${html(statusLabel(item.status))}</span></td><td>${money(item.totalCost)}</td><td><div class="reservation-actions">${buttons.join("") || "—"}</div></td></tr>`;
+    if (item.status === "CONFIRMED") buttons.push(`<button class="text-button" data-action="completar" data-id="${html(item.id)}">Completar</button>`);
+    return `<tr><td><span class="table-primary">${html(item.sala)}</span></td><td>${html(dateLabel(item.startTime, { day: "numeric", month: "short", year: "numeric" }))}</td><td>${html(String(item.startTime).slice(11, 16))}–${html(String(item.endTime).slice(11, 16))}</td><td>${html(item.miembro)}</td><td><span class="status ${html(String(item.status).toLowerCase())}">${html(statusLabel(item.status))}</span></td><td>${money(item.totalCost)}</td><td><div class="reservation-actions">${buttons.join("") || "—"}</div></td></tr>`;
   }).join("");
   const table = state.reservations.length ? `<div class="table-wrap"><table class="data-table">
-    <thead><tr><th>Espacio</th><th>Fecha</th><th>Horario</th><th>${isStaff() ? "Miembro" : "Personas"}</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead><tbody>${actions}</tbody></table></div>`
+    <thead><tr><th>Espacio</th><th>Fecha</th><th>Horario</th><th>Miembro</th><th>Estado</th><th>Total</th><th>Acciones</th></tr></thead><tbody>${actions}</tbody></table></div>`
     : `<div class="empty-state"><span class="empty-icon">▤</span><strong>Aún no tienes reservas</strong><p>Cuando elijas tu primer espacio, lo verás aquí.</p><button class="button small" data-go="disponibilidad" style="margin-top:15px">Buscar espacios</button></div>`;
-  return `${renderHeading("Tus reservas", state.profile?.rol === "MEMBER" ? "Aquí puedes consultar y gestionar tus próximos espacios." : "Consulta las reservas del día y gestiona sus estados.", `<button class="button" data-go="disponibilidad">＋ Nueva reserva</button>`)}
-    <section class="card"><div class="card-heading"><div><h2>Agenda</h2><p>${state.profile?.rol === "MEMBER" ? "Tus espacios reservados" : "Reservas según la fecha seleccionada"}</p></div>${filter}</div>${table}</section>`;
+  return `${renderHeading("Reservas", "Consulta las reservas del día y gestiona sus estados.", `<button class="button" data-go="disponibilidad">＋ Nueva reserva</button>`)}
+    <section class="card"><div class="card-heading"><div><h2>Agenda</h2><p>Reservas según la fecha seleccionada</p></div>${filter}</div>${table}</section>`;
 }
 
 function renderCatalog() {
@@ -389,7 +304,8 @@ async function searchAvailability(event) {
 function openBookingDialog(data) {
   const room = state.availableRooms.find((item) => String(item.salaId) === String(data.bookRoom));
   if (!room) return;
-  const memberOptions = isStaff() ? `<div class="form-field full"><label for="booking-member">Miembro</label><select name="miembroId" id="booking-member" required>${state.members.filter((member) => member.status === "ACTIVE").map((member) => `<option value="${html(member.id)}">${html(member.fullName)}</option>`).join("")}</select></div>` : "";
+  const activeMembers = state.members.filter((member) => member.status === "ACTIVE");
+  const memberOptions = `<div class="form-field full"><label for="booking-member">Miembro</label><select name="miembroId" id="booking-member" required>${activeMembers.map((member) => `<option value="${html(member.id)}">${html(member.fullName)}</option>`).join("")}</select></div>`;
   const services = state.services.length ? `<div class="form-field full"><label>Servicios adicionales (opcional)</label><div class="service-options">${state.services.map((service) => `<div class="service-option"><label><input type="checkbox" name="service-${html(service.id)}" value="${html(service.id)}"> ${html(service.name)}</label><span>${money(service.unitPrice)}</span></div>`).join("")}</div></div>` : "";
   const dialog = document.querySelector("#booking-dialog");
   dialog.innerHTML = `<form class="dialog-content" id="create-booking-form">
@@ -414,7 +330,7 @@ async function createBooking(event, room, data) {
   const serviceItems = state.services.filter((service) => form.has(`service-${service.id}`)).map((service) => ({ servicioId: service.id, quantity: 1 }));
   const request = {
     salaId: room.salaId,
-    miembroId: Number(isStaff() ? form.get("miembroId") : state.profile.miembroId),
+    miembroId: Number(form.get("miembroId")),
     startTime: `${data.date}T${data.start}`,
     endTime: `${data.date}T${data.end}`,
     attendees: Number(form.get("attendees")),
@@ -441,18 +357,10 @@ async function changeBookingStatus(id, action) {
 }
 
 async function start() {
-  if (!state.token) {
-    renderLogin();
-    return;
-  }
   try {
-    state.profile = await api("/auth/perfil");
     await loadWorkspace();
   } catch (error) {
-    if (state.token) {
-      sessionStorage.removeItem("coworkhub-token");
-      renderLogin(error.message);
-    }
+    app.innerHTML = `<main class="loading-screen"><div class="inline-error">${html(error.message)}</div></main>`;
   }
 }
 

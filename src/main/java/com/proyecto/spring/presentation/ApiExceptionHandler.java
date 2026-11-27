@@ -5,8 +5,6 @@ import com.proyecto.spring.presentation.dto.ApiDtos.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,14 +37,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ErrorResponse> duplicate(DataIntegrityViolationException ex) {
         return response(HttpStatus.CONFLICT, "El recurso está duplicado o se encuentra en uso", "RN-11");
-    }
-    @ExceptionHandler(BadCredentialsException.class)
-    ResponseEntity<ErrorResponse> badCredentials(BadCredentialsException ex) {
-        return response(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos", "UNAUTHORIZED");
-    }
-    @ExceptionHandler(AccessDeniedException.class)
-    ResponseEntity<ErrorResponse> accessDenied(AccessDeniedException ex) {
-        return response(HttpStatus.FORBIDDEN, "No tiene permiso para esta operación", "FORBIDDEN");
     }
     @ExceptionHandler(NoResourceFoundException.class)
     ResponseEntity<ErrorResponse> notFound(NoResourceFoundException ex) {

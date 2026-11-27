@@ -1,6 +1,8 @@
 package com.proyecto.spring.presentation.dto;
 
-import com.proyecto.spring.domain.*;
+import com.proyecto.spring.domain.BookingStatus;
+import com.proyecto.spring.domain.MemberStatus;
+import com.proyecto.spring.domain.RoomType;
 import jakarta.validation.constraints.*;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
@@ -30,12 +32,11 @@ public final class ApiDtos {
     public record RoomResponse(Long id, String name, RoomType type, int capacity, BigDecimal hourlyRate, boolean active,
                                Long sedeId, String sede, Set<EquipmentResponse> equipamiento) {}
     public record MemberCreateRequest(@NotBlank @Size(max = 40) String documentNumber, @NotBlank @Size(max = 150) String fullName,
-                                      @NotBlank @Email @Size(max = 180) String email, @NotNull Long planId,
-                                      @NotBlank @Size(max = 80) String username, @NotBlank @Size(min = 8, max = 72) String password) {}
+                                      @NotBlank @Email @Size(max = 180) String email, @NotNull Long planId) {}
     public record MemberUpdateRequest(@NotBlank @Size(max = 150) String fullName, @NotBlank @Email @Size(max = 180) String email,
                                       @NotNull Long planId) {}
     public record MemberResponse(Long id, String documentNumber, String fullName, String email, MemberStatus status,
-                                 Long planId, String plan, String username) {}
+                                 Long planId, String plan) {}
     public record BookingItemRequest(@NotNull Long servicioId, @Positive int quantity) {}
     public record BookingCreateRequest(@NotNull Long salaId, @NotNull Long miembroId, @NotNull LocalDateTime startTime,
                                        @NotNull LocalDateTime endTime, @Positive int attendees,
@@ -49,8 +50,5 @@ public final class ApiDtos {
                                        Long sedeId, String sede, Set<EquipmentResponse> equipamiento) {}
     public record ConsumptionResponse(Long miembroId, String miembro, String mes, BigDecimal horasIncluidas,
                                       BigDecimal horasUsadas, BigDecimal horasRestantes, BigDecimal horasExcedentes) {}
-    public record LoginRequest(@NotBlank String username, @NotBlank String password) {}
-    public record LoginResponse(String token, String tipo, long expiresInSeconds) {}
-    public record ProfileResponse(String usuario, Role rol, Long miembroId) {}
     public record ErrorResponse(String error, String codigo, java.time.Instant timestamp) {}
 }

@@ -1,6 +1,6 @@
 # CoworkHub — guía personal para entender el proyecto
 
-CoworkHub es una **API REST de backend** para administrar una red de coworking: sedes, salas, equipamiento, planes, miembros, servicios y reservas. Recibe y devuelve JSON; no es una aplicación web con pantallas para usuarios finales
+CoworkHub es una aplicación web y API REST para administrar sedes, salas, equipamiento, planes, miembros, servicios y reservas. La interfaz está hecha con HTML, CSS y JavaScript, con textos en español.
 
 Esta guía describe el código que existe hoy, cómo recorrerlo, por qué está dividido en capas y qué reglas ejecuta. Para seguirla, conviene abrir el repositorio en el orden de lectura recomendado.
 
@@ -9,17 +9,16 @@ Esta guía describe el código que existe hoy, cómo recorrerlo, por qué está 
 La API permite:
 
 - Consultar y administrar catálogos de sedes, salas, equipamiento, servicios adicionales y planes.
-- Registrar miembros y sus cuentas, controlar su estado y consultar su consumo mensual.
+- Registrar miembros, controlar su estado y consultar su consumo mensual.
 - Buscar salas disponibles y crear, consultar, confirmar, cancelar o completar reservas.
-- Autenticar usuarios con JWT y restringir operaciones según rol y propiedad del recurso.
 
 La interacción normal es:
 
 ```text
-Cliente HTTP (Postman, Swagger u otra aplicación)
-        │ JSON + Authorization: Bearer <JWT>
+Navegador (HTML + CSS + JavaScript) / Cliente HTTP
+        │ JSON (sin inicio de sesión)
         ▼
-Spring Security → Controller → Service → Repository → JPA/Hibernate → MySQL
+Controller → Service → Repository → JPA/Hibernate → MySQL
         ▲                                                   │
         └──────────── respuesta JSON (DTO) ─────────────────┘
 ```
@@ -31,15 +30,15 @@ Los controladores reciben la solicitud HTTP, los servicios aplican reglas y coor
 Seguí este recorrido para entender una funcionalidad de punta a punta:
 
 1. **Arranque:** [`Application.java`](src/main/java/com/proyecto/spring/Application.java) inicia Spring Boot y descubre los componentes bajo `com.proyecto.spring`.
-2. **Contrato HTTP:** [`presentation/`](src/main/java/com/proyecto/spring/presentation/) define rutas, métodos HTTP, autenticación requerida y códigos de respuesta.
+2. **Contrato HTTP:** [`presentation/`](src/main/java/com/proyecto/spring/presentation/) define rutas, métodos HTTP y códigos de respuesta.
 3. **Datos de entrada y salida:** [`ApiDtos.java`](src/main/java/com/proyecto/spring/presentation/dto/ApiDtos.java) contiene records JSON y validaciones declarativas (`@NotNull`, `@Positive`, etc.).
 4. **Reglas:** [`business/`](src/main/java/com/proyecto/spring/business/) implementa los casos de uso. Para reservas, el punto principal es [`BookingServiceImpl.java`](src/main/java/com/proyecto/spring/business/BookingServiceImpl.java).
 5. **Consultas y bloqueos:** [`persistence/`](src/main/java/com/proyecto/spring/persistence/) declara repositorios Spring Data, consultas JPQL y bloqueos pesimistas.
 6. **Modelo:** [`domain/`](src/main/java/com/proyecto/spring/domain/) define las entidades, relaciones y enumeraciones persistidas.
-7. **Seguridad:** [`security/`](src/main/java/com/proyecto/spring/security/) implementa autenticación JWT y permisos.
-8. **Configuración y base:** [`application.properties`](src/main/resources/application.properties) configura aplicación/JWT/base de datos; [`import.sql`](src/main/resources/import.sql) carga datos de demostración al crear el esquema.
+7. **Configuración y base:** [`application.properties`](src/main/resources/application.properties) configura la aplicación y la conexión a la base; [`import.sql`](src/main/resources/import.sql) carga datos de demostración al crear el esquema.
+8. **Interfaz:** [`static/`](src/main/resources/static/) contiene la aplicación web.
 9. **Pruebas:** [`src/test/java/com/proyecto/spring/`](src/test/java/com/proyecto/spring/) verifica reglas y comportamiento HTTP con MockMvc.
-10. **Contrato y escenarios manuales:** [`docs/openapi.json`](docs/openapi.json), [`docs/CoworkHub.postman_collection.json`](docs/CoworkHub.postman_collection.json), [`docs/analisis.md`](docs/analisis.md) y [`docs/runtime-validation-report.md`](docs/runtime-validation-report.md).
+10. **Contrato y escenarios manuales:** [`docs/openapi.json`](docs/openapi.json), [`docs/CoworkHub.postman_collection.json`](docs/CoworkHub.postman_collection.json) y documentación adicional en `docs/`.
 
 ### Mapa de carpetas
 
@@ -51,7 +50,6 @@ src/main/java/com/proyecto/spring/
 ├── business/        Casos de uso, transacciones y reglas del negocio
 ├── persistence/     Repositorios y consultas JPA
 ├── domain/          Entidades, estados y enums
-└── security/        JWT, principal, filtros y autorización
 
 src/main/resources/
 ├── application.properties
@@ -69,13 +67,13 @@ La separación evita que una petición HTTP tenga que conocer directamente los d
 
 ### Presentation — entrada y salida HTTP
 
-Los controladores convierten rutas y cuerpos JSON en llamadas a servicios. También declaran quién puede ejecutar cada operación. Por ejemplo, [`BookingController.java`](src/main/java/com/proyecto/spring/presentation/BookingController.java) recibe solicitudes de reserva; no calcula por sí mismo el precio ni decide si el horario se solapa.
+Los controladores convierten rutas y cuerpos JSON en llamadas a servicios. Por ejemplo, [`BookingController.java`](src/main/java/com/proyecto/spring/presentation/BookingController.java) recibe solicitudes de reserva; no calcula por sí mismo el precio ni decide si el horario se solapa. Las rutas no requieren iniciar sesión.
 
 [`ApiDtos.java`](src/main/java/com/proyecto/spring/presentation/dto/ApiDtos.java) fija el contrato de las solicitudes/respuestas y evita serializar entidades JPA, sus relaciones o datos que no deban formar parte de la API.
 
 ### Business — casos de uso y reglas
 
-Los servicios agrupan operaciones que deben ser coherentes y ejecutarse en transacciones. Por ejemplo, crear un miembro y su cuenta de acceso es una sola operación lógica; crear una reserva valida horario, miembro, sala, cupo, precio y servicios antes de guardar.
+Los servicios agrupan operaciones que deben ser coherentes y ejecutarse en transacciones. Registrar un miembro guarda sus datos de negocio; crear una reserva valida horario, miembro, sala, cupo, precio y servicios antes de guardar.
 
 `BusinessException` representa errores esperados del negocio con estado HTTP y código funcional. [`ApiExceptionHandler.java`](src/main/java/com/proyecto/spring/presentation/ApiExceptionHandler.java) los traduce a una respuesta JSON uniforme.
 
@@ -89,7 +87,7 @@ Las entidades describen los datos que persisten y sus relaciones; los enums limi
 
 ### Configuración — infraestructura compartida
 
-[`AppConfig.java`](src/main/java/com/proyecto/spring/config/AppConfig.java) proporciona, entre otros, un `Clock` inyectable y el encoder BCrypt. Usar `Clock` permite hacer deterministas las reglas temporales en pruebas. [`OpenApiConfig.java`](src/main/java/com/proyecto/spring/config/OpenApiConfig.java) configura Swagger/OpenAPI.
+[`AppConfig.java`](src/main/java/com/proyecto/spring/config/AppConfig.java) proporciona un `Clock` inyectable. Usarlo permite hacer deterministas las reglas temporales en pruebas. [`OpenApiConfig.java`](src/main/java/com/proyecto/spring/config/OpenApiConfig.java) configura Swagger/OpenAPI.
 
 **Detalle de la implementación actual:** los servicios de negocio importan los DTO definidos dentro de `presentation`. Para este proyecto simplifica el mapeo de entrada/salida, aunque hace que `business` conozca el paquete de presentación; una separación arquitectónica más estricta movería los contratos de aplicación a un paquete neutral.
 
@@ -101,8 +99,7 @@ Las entidades describen los datos que persisten y sus relaciones; los enums limi
 | `Room` | Sala, tipo, capacidad, tarifa y estado activo | Pertenece a una sede; tiene equipamiento y reservas |
 | `Equipment` | Elemento disponible en una sala | Relación muchos-a-muchos con salas mediante `room_equipment` |
 | `MembershipPlan` | Horas incluidas, descuento por exceso y máximo de reservas activas | Un plan puede pertenecer a varios miembros |
-| `Member` | Persona, estado y plan | Puede tener una cuenta y varias reservas |
-| `UserAccount` | Usuario, contraseña codificada y rol | Asociada opcionalmente a un miembro; las cuentas de empleados no necesitan miembro |
+| `Member` | Persona, estado y plan | Puede tener varias reservas |
 | `AdditionalService` | Servicio adicional y precio unitario actual | Puede aparecer en varios detalles de reserva |
 | `Booking` | Horario, asistentes, estado y totales | Pertenece a una sala y un miembro; contiene detalles |
 | `BookingItem` | Servicio, cantidad y precio unitario aplicado | Pertenece a una reserva; no se repite el mismo servicio dentro de ella |
@@ -115,7 +112,6 @@ Los precios de los servicios se copian a `BookingItem.appliedUnitPrice`. Así, s
 
 - Reserva: `PENDING` → `CONFIRMED` → `COMPLETED`; también puede pasar a `CANCELLED` si cumple la política de cancelación.
 - Miembro: `ACTIVE` o `SUSPENDED`.
-- Rol de cuenta: `ADMIN`, `RECEPTIONIST` o `MEMBER`.
 - Tipos de sala: `RoomType` (por ejemplo, sala de reunión, oficina privada o escritorio).
 
 ## 5. Recorrido de una reserva
@@ -123,8 +119,7 @@ Los precios de los servicios se copian a `BookingItem.appliedUnitPrice`. Así, s
 Al recibir `POST /api/reservas`, la aplicación:
 
 1. Valida la forma del JSON con Bean Validation.
-2. Spring Security verifica el JWT y el controlador comprueba el rol.
-3. El servicio carga/bloquea el miembro; un `MEMBER` solo puede reservar para sí mismo.
+2. El servicio carga/bloquea el miembro indicado por `miembroId`.
 4. Bloquea la fila de la sala con `PESSIMISTIC_WRITE`.
 5. Comprueba que la reserva sea en un solo día, dure entre 30 minutos y 8 horas en intervalos de 30 minutos, empiece al menos una hora en el futuro, respete el horario de la sede, use una sala activa y no exceda su capacidad.
 6. Rechaza miembros suspendidos, miembros que superen el máximo de reservas activas del plan o una sala cuyo horario se cruce con una reserva `PENDING`/`CONFIRMED`.
@@ -148,34 +143,24 @@ El criterio de cruce es de extremos abiertos: una reserva que termina exactament
 - `RN-10`: los servicios de una reserva solo se modifican mientras está `PENDING`.
 - `RN-11`: duplicados (por ejemplo, nombres de catálogo, documento, correo o servicio repetido en una reserva).
 - `RN-12`: no borrar catálogos que todavía están referenciados/usan otros registros.
-- `RN-13`: permisos de acceso por rol y propiedad.
 
 Cancelación: con 24 horas o más no tiene cargo; con al menos 2 y menos de 24 horas cobra el 50 % del costo de sala; por debajo de 2 horas se rechaza. Solo se puede cancelar una reserva `PENDING` o `CONFIRMED`.
 
 El consumo mensual se agrupa por el mes de inicio de la reserva y suma reservas `PENDING`, `CONFIRMED` y `COMPLETED`; las canceladas no cuentan. El servicio informa horas incluidas, usadas, restantes y excedentes.
 
-## 6. API, roles y autenticación
+## 6. API y acceso
 
-Las rutas de negocio `/api/**` requieren JWT. El estado de salud, login y documentación OpenAPI/Swagger son públicos. Enviar el token así:
+Las rutas de la aplicación y `/api/**` son públicas: no existe inicio de sesión, token, cuenta de acceso ni rol. Los miembros se conservan como registros de negocio; al crear una reserva se selecciona el miembro correspondiente.
 
-```http
-Authorization: Bearer <token>
-```
+| Funcionalidad | Rutas principales |
+|---|---|
+| Catálogos | `/api/sedes`, `/api/salas`, `/api/equipamientos`, `/api/servicios-adicionales`, `/api/planes` |
+| Miembros y consumo | `/api/miembros` y `/api/miembros/{id}/consumo?mes=yyyy-MM` |
+| Disponibilidad | `GET /api/disponibilidad` |
+| Reservas | `/api/reservas`, `/api/reservas/{id}` y acciones `/confirmar`, `/cancelar`, `/completar`, `/servicios` |
+| Salud | `GET /actuator/health` |
 
-`POST /auth/login` valida la contraseña con BCrypt y devuelve un JWT con validez de 3600 segundos. El filtro JWT crea el principal para cada solicitud protegida. Los permisos se controlan en SecurityConfig y en los métodos de los controladores; la propiedad de miembros/reservas se verifica con `AccessControl` y también en el servicio donde corresponde.
-
-| Funcionalidad | Rutas principales | Permisos |
-|---|---|---|
-| Login y perfil | `POST /auth/login`, `GET /auth/perfil` | Login público; perfil autenticado |
-| Catálogos | `/api/sedes`, `/api/salas`, `/api/equipamientos`, `/api/servicios-adicionales`, `/api/planes` | Consultas: cualquier rol autenticado; crear/editar/borrar: `ADMIN` |
-| Miembros | `/api/miembros` y `/api/miembros/{id}` | Gestión/listado: `ADMIN` o `RECEPTIONIST`; `MEMBER` puede ver su propio perfil/consumo |
-| Consumo | `GET /api/miembros/{id}/consumo?mes=yyyy-MM` | `ADMIN`, `RECEPTIONIST` o el propio miembro |
-| Disponibilidad | `GET /api/disponibilidad` | Cualquier usuario autenticado |
-| Reservas | `/api/reservas`, `/api/reservas/{id}` | `ADMIN`/`RECEPTIONIST`; `MEMBER` según su propia reserva |
-| Acciones de reserva | `.../confirmar`, `.../cancelar`, `.../completar`, `.../servicios` | Confirmar/completar: personal; cancelar y editar servicios: personal o dueño según la operación |
-| Salud | `GET /actuator/health` | Público |
-
-Los miembros pueden crear reservas, pero el backend impide que un rol `MEMBER` elija el ID de otro miembro. El `GET /api/reservas` exige al menos un filtro; la búsqueda por sala requiere fecha. Los filtros de disponibilidad admiten capacidad mínima y equipamientos requeridos.
+El `GET /api/reservas` exige al menos un filtro; la búsqueda por sala requiere fecha. Los filtros de disponibilidad admiten capacidad mínima y equipamientos requeridos.
 
 ### Formato de errores
 
@@ -189,11 +174,11 @@ Las respuestas de error tienen la forma:
 }
 ```
 
-En general: `400` datos inválidos, `401` falta de autenticación/token inválido, `403` permiso insuficiente, `404` recurso inexistente y `409` conflicto de negocio. El `ApiExceptionHandler` centraliza las traducciones para evitar formatos distintos por endpoint.
+En general: `400` datos inválidos, `404` recurso inexistente y `409` conflicto de negocio. El `ApiExceptionHandler` centraliza las traducciones para evitar formatos distintos por endpoint.
 
 ## 7. Configuración y datos de demostración
 
-El build se define en [`pom.xml`](pom.xml): Java 21, Spring Boot 4.1.2, Spring MVC, Spring Data JPA, Spring Security, Bean Validation, Actuator, springdoc/OpenAPI, JJWT, MySQL y H2 para pruebas. Maven Wrapper (`mvnw.cmd`) permite ejecutar Maven sin instalarlo globalmente.
+El build se define en [`pom.xml`](pom.xml): Java 21, Spring Boot 4.1.2, Spring MVC, Spring Data JPA, Bean Validation, Actuator, springdoc/OpenAPI, MySQL y H2 para pruebas. Maven Wrapper (`mvnw.cmd`) permite ejecutar Maven sin instalarlo globalmente.
 
 La aplicación toma estos valores de configuración:
 
@@ -202,11 +187,10 @@ La aplicación toma estos valores de configuración:
 | `DB_URL` | URL JDBC; por defecto apunta a MySQL local en el puerto 3308 y base `academia` |
 | `DB_USERNAME`, `DB_PASSWORD` | Credenciales de base de datos |
 | `DDL_AUTO` | Estrategia de esquema Hibernate; por defecto `update` |
-| `JWT_SECRET` | Secreto de firma JWT; debe tener al menos 32 caracteres |
 
-La configuración del repositorio incluye valores convenientes para desarrollo. **No los uses en un despliegue real.** Define credenciales y un secreto propios por variables de entorno. `DDL_AUTO=create` recrea las tablas y puede borrar datos; `update` conserva y actualiza el esquema, `validate` solo valida compatibilidad.
+`DB_USERNAME` y `DB_PASSWORD` solo conectan Spring con MySQL; no son cuentas de la aplicación. `DDL_AUTO=create` recrea las tablas y puede borrar datos; `update` conserva y actualiza el esquema, `validate` solo valida compatibilidad.
 
-`import.sql` contiene datos de prueba (dos sedes, seis salas, cuatro equipamientos, tres planes, tres servicios, cinco miembros, cuatro cuentas y quince reservas, además de asociaciones y detalles). Las fechas de reserva se calculan respecto de la fecha/hora de carga. El archivo se ejecuta cuando Hibernate crea el esquema; no debe asumirse que vuelve a cargar los datos en cada arranque con un esquema ya existente.
+`import.sql` contiene datos de prueba para sedes, salas, equipamientos, planes, servicios, miembros y reservas. Las fechas de reserva se calculan respecto de la fecha/hora de carga. El archivo se ejecuta cuando Hibernate crea el esquema; no debe asumirse que vuelve a cargar los datos en cada arranque con un esquema ya existente.
 
 En la configuración de prueba, [`src/test/resources/application.properties`](src/test/resources/application.properties), se usa H2 en memoria en modo compatible con MySQL y `create-drop`. Esto aísla los tests y permite que creen/carguen su propia base efímera.
 
@@ -219,7 +203,6 @@ En la configuración de prueba, [`src/test/resources/application.properties`](sr
 $env:DB_URL="jdbc:mysql://localhost:3308/academia?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
 $env:DB_USERNAME="<usuario>"
 $env:DB_PASSWORD="<contraseña>"
-$env:JWT_SECRET="<secreto-de-al-menos-32-caracteres>"
 $env:DDL_AUTO="update"
 ```
 
@@ -240,7 +223,7 @@ Para una base nueva que deba recibir el seed, configura `DDL_AUTO=create` solo e
 - Contrato versionado: [`docs/openapi.json`](docs/openapi.json).
 - Escenarios de aceptación manuales: [`docs/CoworkHub.postman_collection.json`](docs/CoworkHub.postman_collection.json).
 
-Swagger UI sirve para explorar y probar endpoints; es una herramienta de documentación para desarrolladores, no un frontend de negocio para miembros o recepcionistas.
+Swagger UI sirve para explorar y probar endpoints. La interfaz web para administrar reservas está disponible en la raíz de la aplicación.
 
 ## 8. Pruebas y estado de validación
 
@@ -259,16 +242,14 @@ Empaqueta el JAR:
 Pruebas disponibles:
 
 - `ApplicationTests`: verifica que el contexto Spring se pueda iniciar.
-- `CoworkingApiTests`: pruebas de integración con Spring Boot y MockMvc: autenticación, permisos, endpoints, reglas de reserva, costos, filtros, seed y OpenAPI.
+- `CoworkingApiTests`: pruebas de integración con Spring Boot y MockMvc: acceso público, endpoints, reglas de reserva, costos, filtros, seed y OpenAPI.
 - `BookingCancellationRulesTests`: pruebas unitarias de política de cancelación y transiciones, con reloj fijo.
 
 El informe más reciente guardado en [`docs/runtime-validation-report.md`](docs/runtime-validation-report.md) registra que la suite completa pasó (20 pruebas) y que el paquete se generó correctamente. También distingue esas pruebas MockMvc de pruebas HTTP contra un servidor real: en esa validación la aplicación no quedó escuchando en el puerto 8080, la colección Postman completa no se ejecutó y la concurrencia real de dos requests en MySQL quedó pendiente de verificación. El bloqueo está implementado, pero conviene no presentar esos tres puntos como evidencia ya obtenida.
 
-## 9. Por qué no se hizo frontend
+## 9. Interfaz web
 
-**Motivo defendible a partir del alcance que refleja el repositorio (no consta aquí una decisión histórica explícita):** se priorizó entregar el backend y sus reglas de negocio como una API REST reutilizable. El problema central del proyecto está en reservas, disponibilidad, precios, membresías, concurrencia y permisos; esas capacidades pueden validarse directamente con Swagger, Postman y pruebas automatizadas. Una interfaz web habría añadido otro producto (diseño, navegación, formularios, estado de sesión y cliente HTTP) sin ser necesaria para implementar ni demostrar el contrato del backend.
-
-Por eso el repositorio contiene Java/Spring y documentación de API, pero no una aplicación React/Angular/Vue ni plantillas web. Swagger UI puede parecer una interfaz, pero solo permite explorar/probar la API; no reemplaza una experiencia de usuario final. La API queda preparada para que un frontend independiente la consuma más adelante.
+El frontend se sirve desde `src/main/resources/static/` y consume la API local. Incluye panel, disponibilidad, reservas y catálogos con una paleta morada y textos en español. No requiere instalar Node ni generar archivos antes de iniciar Spring Boot.
 
 ## 10. Guía rápida para investigar una duda
 
@@ -277,6 +258,6 @@ Por eso el repositorio contiene Java/Spring y documentación de API, pero no una
 - **¿Por qué acepta o rechaza una operación?** Sigue la llamada a `business/`; para reservas, empieza en `BookingServiceImpl`.
 - **¿Qué consulta ejecuta?** Sigue el repositorio inyectado en el servicio y revisa sus métodos `find...`, `exists...` o `@Query`.
 - **¿Dónde se guarda cada dato?** Busca la entidad de `domain/` y sus anotaciones JPA.
-- **¿Por qué recibo 401/403?** Revisa `SecurityConfig`, `JwtAuthenticationFilter`, `@PreAuthorize` y `AccessControl`.
+- **¿Cómo se accede a las rutas?** La aplicación no tiene autenticación; las rutas están disponibles directamente.
 - **¿Por qué el error tiene ese JSON?** Revisa `BusinessException` y `ApiExceptionHandler`.
 - **¿Cómo se espera que funcione el proyecto completo?** Compara los tests con `docs/analisis.md`, `docs/plan.md` y la colección Postman.

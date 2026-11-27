@@ -3,7 +3,6 @@ package com.proyecto.spring.business;
 import com.proyecto.spring.domain.*;
 import com.proyecto.spring.persistence.*;
 import com.proyecto.spring.presentation.dto.ApiDtos.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -17,15 +16,12 @@ public class MemberServiceImpl implements MemberService {
     private static final List<BookingStatus> CONSUMING = List.of(BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.COMPLETED);
     private final MemberRepository members;
     private final MembershipPlanRepository plans;
-    private final UserAccountRepository users;
     private final BookingRepository bookings;
-    private final PasswordEncoder passwordEncoder;
     private final Clock clock;
 
-    public MemberServiceImpl(MemberRepository members, MembershipPlanRepository plans, UserAccountRepository users,
-                             BookingRepository bookings, PasswordEncoder passwordEncoder, Clock clock) {
-        this.members = members; this.plans = plans; this.users = users; this.bookings = bookings;
-        this.passwordEncoder = passwordEncoder; this.clock = clock;
+    public MemberServiceImpl(MemberRepository members, MembershipPlanRepository plans,
+                             BookingRepository bookings, Clock clock) {
+        this.members = members; this.plans = plans; this.bookings = bookings; this.clock = clock;
     }
     @Override @Transactional(readOnly = true)
     public List<MemberResponse> list(String name, MemberStatus status) { return members.search(blankToNull(name), status).stream().map(this::dto).toList(); }
@@ -35,10 +31,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse create(MemberCreateRequest request) {
         if (members.existsByDocumentNumberIgnoreCase(request.documentNumber())) throw BusinessException.conflict("El documento ya existe", "RN-11");
         if (members.existsByEmailIgnoreCase(request.email())) throw BusinessException.conflict("El email ya existe", "RN-11");
-        if (users.existsByUsernameIgnoreCase(request.username())) throw BusinessException.conflict("El usuario ya existe", "RN-11");
         MembershipPlan plan = plans.findById(request.planId()).orElseThrow(() -> BusinessException.notFound("Plan no encontrado"));
         Member member = new Member(request.documentNumber(), request.fullName(), request.email(), plan);
-        member.setUserAccount(new UserAccount(request.username(), passwordEncoder.encode(request.password()), Role.MEMBER));
         return dto(members.save(member));
     }
     @Override
@@ -74,15 +68,10 @@ public class MemberServiceImpl implements MemberService {
         BigDecimal overage = used.subtract(included).max(BigDecimal.ZERO);
         return new ConsumptionResponse(id, member.getFullName(), month.toString(), included, used, remaining, overage);
     }
-    @Override @Transactional(readOnly = true)
-    public Long memberIdForUsername(String username) {
-        return members.findByUserAccountUsername(username).map(Member::getId)
-                .orElseThrow(() -> BusinessException.forbidden("La cuenta no corresponde a un miembro"));
-    }
     private Member require(Long id) { return members.findDetailedById(id).orElseThrow(() -> BusinessException.notFound("Miembro no encontrado")); }
     private String blankToNull(String value) { return value == null || value.isBlank() ? null : value; }
     private MemberResponse dto(Member e) {
         return new MemberResponse(e.getId(), e.getDocumentNumber(), e.getFullName(), e.getEmail(), e.getStatus(),
-                e.getPlan().getId(), e.getPlan().getName(), e.getUserAccount() == null ? null : e.getUserAccount().getUsername());
+                e.getPlan().getId(), e.getPlan().getName());
     }
 }

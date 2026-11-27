@@ -1,86 +1,170 @@
 {
   "info": {
     "name": "CoworkHub - 14 acceptance scenarios",
-    "description": "Log in as ana, admin, and reception with password `password` and set token, adminToken, and receptionToken. Scenario 1 stores its new booking id. The seeded bookings 1/2/3 are scheduled dynamically for approximately +30h/+5h/+1h. Run scenario 13's two identical requests concurrently in Postman Runner to verify the database lock.",
+    "description": "Escenarios de aceptaci?n p?blicos. Los datos semilla se ajustan a la fecha de carga. Ejecuta las dos solicitudes del escenario 13 en paralelo para verificar el bloqueo de sala.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "auth": {
-    "type": "bearer",
-    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-  },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080" },
-    { "key": "token", "value": "" },
-    { "key": "adminToken", "value": "" },
-    { "key": "receptionToken", "value": "" },
-    { "key": "bookingId", "value": "1" },
-    { "key": "startTime", "value": "2030-06-03T10:00:00" },
-    { "key": "endTime", "value": "2030-06-03T11:00:00" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "bookingId",
+      "value": "1"
+    },
+    {
+      "key": "startTime",
+      "value": "2030-06-03T10:00:00"
+    },
+    {
+      "key": "endTime",
+      "value": "2030-06-03T11:00:00"
+    }
   ],
   "item": [
     {
       "name": "01 - Reserve a free room with two services (201)",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"{{startTime}}\",\"endTime\":\"{{endTime}}\",\"attendees\":3,\"servicios\":[{\"servicioId\":1,\"quantity\":2},{\"servicioId\":2,\"quantity\":1}]}" },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"{{startTime}}\",\"endTime\":\"{{endTime}}\",\"attendees\":3,\"servicios\":[{\"servicioId\":1,\"quantity\":2},{\"servicioId\":2,\"quantity\":1}]}"
+        },
         "url": "{{baseUrl}}/api/reservas"
       },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["if (pm.response.code === 201) pm.collectionVariables.set('bookingId', pm.response.json().id);"] } }]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 201) pm.collectionVariables.set('bookingId', pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "02 - Overlapping reservation (409 RN-01)",
-      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"{{startTime}}\",\"endTime\":\"{{endTime}}\",\"attendees\":2,\"servicios\":[]}" }, "url": "{{baseUrl}}/api/reservas" }
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"{{startTime}}\",\"endTime\":\"{{endTime}}\",\"attendees\":2,\"servicios\":[]}"
+        },
+        "url": "{{baseUrl}}/api/reservas"
+      }
     },
     {
       "name": "03 - Back-to-back booking (201)",
-      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"2030-06-03T11:00:00\",\"endTime\":\"2030-06-03T12:00:00\",\"attendees\":2,\"servicios\":[]}" }, "url": "{{baseUrl}}/api/reservas" }
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"salaId\":1,\"miembroId\":1,\"startTime\":\"2030-06-03T11:00:00\",\"endTime\":\"2030-06-03T12:00:00\",\"attendees\":2,\"servicios\":[]}"
+        },
+        "url": "{{baseUrl}}/api/reservas"
+      }
     },
     {
       "name": "04 - Invalid duration (409 RN-02)",
-      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"salaId\":2,\"miembroId\":1,\"startTime\":\"2030-06-04T10:00:00\",\"endTime\":\"2030-06-04T10:45:00\",\"attendees\":2,\"servicios\":[]}" }, "url": "{{baseUrl}}/api/reservas" }
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"salaId\":2,\"miembroId\":1,\"startTime\":\"2030-06-04T10:00:00\",\"endTime\":\"2030-06-04T10:45:00\",\"attendees\":2,\"servicios\":[]}"
+        },
+        "url": "{{baseUrl}}/api/reservas"
+      }
     },
     {
       "name": "05 - Cancel more than 24h ahead (200, fee 0)",
-      "request": { "method": "POST", "url": "{{baseUrl}}/api/reservas/{{bookingId}}/cancelar" }
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/reservas/{{bookingId}}/cancelar"
+      }
     },
     {
       "name": "06 - Cancel 5h ahead (200, half room cost)",
-      "request": { "method": "POST", "url": "{{baseUrl}}/api/reservas/2/cancelar" }
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/reservas/2/cancelar"
+      }
     },
     {
       "name": "07 - Cancel 1h ahead (409 RN-08)",
-      "request": { "method": "POST", "url": "{{baseUrl}}/api/reservas/3/cancelar" }
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/reservas/3/cancelar"
+      }
     },
     {
       "name": "08 - Confirm a cancelled booking (409 RN-09)",
-      "request": { "method": "POST", "url": "{{baseUrl}}/api/reservas/{{bookingId}}/confirmar" }
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/reservas/{{bookingId}}/confirmar"
+      }
     },
     {
-      "name": "09 - Member reads another member's booking (403)",
-      "request": { "method": "GET", "url": "{{baseUrl}}/api/reservas/3" }
+      "name": "09 - Read another member booking (200)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/reservas/3"
+      }
     },
     {
-      "name": "10 - Request without a token (401)",
-      "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/api/planes" },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "pm.test('missing token is rejected', function () { pm.response.to.have.status(401); });",
-        "pm.sendRequest({ url: pm.collectionVariables.get('baseUrl') + '/api/planes', method: 'GET', header: { Authorization: 'Bearer tampered.token.value' } }, function (error, response) {",
-        "  pm.test('tampered token is rejected', function () { pm.expect(error).to.be.null; pm.expect(response.code).to.eql(401); });",
-        "});"
-      ] } }]
+      "name": "10 - Public plans endpoint (200)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/planes"
+      }
     },
     {
       "name": "11 - Delete a room with bookings (409 RN-12)",
-      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/salas/1", "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] } }
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/salas/1"
+      }
     },
     {
       "name": "12 - Create a location without a name (400)",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
-        "body": { "mode": "raw", "raw": "{\"city\":\"Buenos Aires\",\"address\":\"Test\",\"openingTime\":\"08:00:00\",\"closingTime\":\"18:00:00\"}" },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"city\":\"Buenos Aires\",\"address\":\"Test\",\"openingTime\":\"08:00:00\",\"closingTime\":\"18:00:00\"}"
+        },
         "url": "{{baseUrl}}/api/sedes"
       }
     },
@@ -88,14 +172,25 @@
       "name": "13 - Concurrent same-room bookings (one 201, one 409)",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\"salaId\":2,\"miembroId\":1,\"startTime\":\"2030-06-05T10:00:00\",\"endTime\":\"2030-06-05T11:00:00\",\"attendees\":2,\"servicios\":[]}" },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"salaId\":2,\"miembroId\":1,\"startTime\":\"2030-06-05T10:00:00\",\"endTime\":\"2030-06-05T11:00:00\",\"attendees\":2,\"servicios\":[]}"
+        },
         "url": "{{baseUrl}}/api/reservas"
       }
     },
     {
-      "name": "14 - Filter suspended members (200, staff token required)",
-      "request": { "method": "GET", "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{receptionToken}}", "type": "string" }] }, "url": "{{baseUrl}}/api/miembros?estado=SUSPENDED" }
+      "name": "14 - Filter suspended members (200)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/miembros?estado=SUSPENDED"
+      }
     }
   ]
 }

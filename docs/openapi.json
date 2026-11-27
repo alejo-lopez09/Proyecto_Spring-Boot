@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CoworkHub API",
-    "description": "REST API para reservas y membresías de una red de coworking.",
+    "description": "API REST p?blica para administrar sedes, salas, equipamiento, planes, miembros, servicios y reservas.",
     "version": "1.0.0"
   },
   "servers": [
@@ -19,10 +19,6 @@
     {
       "name": "Miembros",
       "description": "Gestión de miembros y consulta de consumo mensual"
-    },
-    {
-      "name": "Autenticación",
-      "description": "Inicio de sesión y perfil de la cuenta autenticada"
     },
     {
       "name": "Reservas",
@@ -58,26 +54,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -98,12 +74,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -142,26 +113,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -182,12 +133,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -216,26 +162,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -256,12 +182,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/sedes/{id}": {
@@ -292,26 +213,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -332,12 +233,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -376,26 +272,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -416,12 +292,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -450,26 +321,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -490,12 +341,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/salas/{id}": {
@@ -526,26 +372,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -566,12 +392,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -610,26 +431,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -650,12 +451,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -684,26 +480,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -724,12 +500,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/planes/{id}": {
@@ -760,26 +531,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -800,12 +551,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -844,26 +590,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -884,12 +610,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -918,26 +639,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -958,12 +659,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/miembros/{id}": {
@@ -994,26 +690,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -1034,12 +710,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -1078,26 +749,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -1118,12 +769,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1152,26 +798,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -1192,12 +818,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/equipamientos/{id}": {
@@ -1228,26 +849,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1268,12 +869,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -1312,26 +908,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1352,12 +928,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1386,26 +957,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1418,46 +969,6 @@
           },
           "409": {
             "description": "Duplicado o recurso en uso",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "tags": [
-          "Autenticación"
-        ],
-        "summary": "Iniciar sesión y obtener JWT (validez de 60 minutos)",
-        "operationId": "login",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              },
-              "example": {
-                "username": "ana",
-                "password": "password"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "401": {
-            "description": "Credenciales incorrectas",
             "content": {
               "*/*": {
                 "schema": {
@@ -1486,26 +997,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1526,12 +1017,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -1559,26 +1045,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1599,12 +1065,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/sedes": {
@@ -1624,26 +1085,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1664,12 +1105,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -1697,26 +1133,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1737,12 +1153,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/salas": {
@@ -1773,26 +1184,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1813,12 +1204,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -1846,26 +1232,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1886,12 +1252,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas": {
@@ -1954,26 +1315,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -1994,12 +1335,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2041,26 +1377,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2081,12 +1397,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}/servicios": {
@@ -2127,26 +1438,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2167,12 +1458,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}/confirmar": {
@@ -2203,26 +1489,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2243,12 +1509,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}/completar": {
@@ -2279,26 +1540,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2319,12 +1560,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}/cancelar": {
@@ -2356,26 +1592,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2396,12 +1612,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/planes": {
@@ -2413,26 +1624,6 @@
         "responses": {
           "400": {
             "description": "Datos inválidos",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
             "content": {
               "*/*": {
                 "schema": {
@@ -2461,12 +1652,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2494,26 +1680,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2534,12 +1700,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/miembros": {
@@ -2581,26 +1742,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -2621,12 +1762,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2654,26 +1790,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -2694,12 +1810,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/equipamientos": {
@@ -2711,26 +1822,6 @@
         "responses": {
           "400": {
             "description": "Datos inválidos",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
             "content": {
               "*/*": {
                 "schema": {
@@ -2759,12 +1850,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2792,26 +1878,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Rol insuficiente",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -2832,12 +1898,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/miembros/{id}/suspender": {
@@ -2868,26 +1929,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -2908,12 +1949,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/miembros/{id}/activar": {
@@ -2944,26 +1980,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -2984,37 +2000,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/auth/perfil": {
-      "get": {
-        "tags": [
-          "Autenticación"
-        ],
-        "operationId": "profile",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProfileResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}": {
@@ -3045,26 +2031,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -3085,12 +2051,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/miembros/{id}/consumo": {
@@ -3129,26 +2090,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede consultar datos de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Miembro inexistente",
             "content": {
@@ -3169,12 +2110,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/disponibilidad": {
@@ -3252,26 +2188,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -3292,12 +2208,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/reservas/{id}/servicios/{servicioId}": {
@@ -3337,26 +2248,6 @@
               }
             }
           },
-          "401": {
-            "description": "Falta un JWT válido",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "No puede acceder a la reserva de otro miembro",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
             "description": "Recurso inexistente",
             "content": {
@@ -3377,12 +2268,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
@@ -3566,23 +2452,6 @@
           "name"
         ]
       },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "minLength": 1
-          },
-          "password": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": [
-          "password",
-          "username"
-        ]
-      },
       "BookingCreateRequest": {
         "type": "object",
         "properties": {
@@ -3657,53 +2526,14 @@
           "planId": {
             "type": "integer",
             "format": "int64"
-          },
-          "username": {
-            "type": "string",
-            "maxLength": 80,
-            "minLength": 0
-          },
-          "password": {
-            "type": "string",
-            "maxLength": 72,
-            "minLength": 8
           }
         },
         "required": [
           "documentNumber",
           "email",
           "fullName",
-          "password",
-          "planId",
-          "username"
+          "planId"
         ]
-      },
-      "ProfileResponse": {
-        "type": "object",
-        "properties": {
-          "usuario": {
-            "type": "string"
-          },
-          "rol": {
-            "type": "string",
-            "enum": [
-              "ADMIN",
-              "RECEPTIONIST",
-              "MEMBER"
-            ]
-          },
-          "miembroId": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }

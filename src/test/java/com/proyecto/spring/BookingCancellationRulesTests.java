@@ -83,7 +83,7 @@ class BookingCancellationRulesTests {
                 mock(MemberRepository.class), mock(AdditionalServiceRepository.class), mock(LocationRepository.class),
                 Clock.systemUTC());
 
-        service.search(1L, null, null, null, "admin", "ADMIN");
+        service.search(1L, null, null, null);
 
         ArgumentCaptor<LocalDateTime> start = ArgumentCaptor.forClass(LocalDateTime.class);
         ArgumentCaptor<LocalDateTime> end = ArgumentCaptor.forClass(LocalDateTime.class);

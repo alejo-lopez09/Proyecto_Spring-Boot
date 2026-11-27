@@ -32,19 +32,9 @@ button, input, select { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 
-.loading-screen, .login-screen { min-height: 100vh; display: grid; place-content: center; justify-items: center; }
+.loading-screen { min-height: 100vh; display: grid; place-content: center; justify-items: center; }
 .loading-screen p { color: var(--muted); }
 .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; color: white; background: var(--purple-700); font: 800 24px Manrope, sans-serif; }
-.login-screen { padding: 28px; background: radial-gradient(ellipse at 15% 15%, #eee6fa 0, transparent 37%), var(--canvas); }
-.login-layout { display: grid; grid-template-columns: minmax(290px, 430px) minmax(320px, 480px); align-items: center; gap: clamp(44px, 8vw, 120px); max-width: 1040px; }
-.login-intro { max-width: 430px; }
-.login-intro h1 { margin: 28px 0 16px; font: 800 clamp(38px, 5vw, 58px)/1.08 "Segoe UI", sans-serif; letter-spacing: -2.7px; color: var(--purple-950); }
-.login-intro h1 span { color: var(--purple-600); }
-.login-intro p { max-width: 380px; color: var(--muted); line-height: 1.7; font-size: 16px; }
-.login-card { padding: 38px; border: 1px solid #eeebf1; border-radius: 24px; background: var(--surface); box-shadow: 0 24px 70px #31204b12; }
-.login-card h2 { margin: 0 0 8px; font: 700 25px "Segoe UI", sans-serif; }
-.login-card > p { margin: 0 0 28px; color: var(--muted); font-size: 14px; }
-.login-tip { padding: 12px 14px; margin-top: 20px; border-radius: 12px; color: var(--purple-800); background: var(--purple-50); font-size: 12px; line-height: 1.55; }
 
 .app-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
 .sidebar { position: sticky; top: 0; display: flex; flex-direction: column; height: 100vh; padding: 28px 18px 20px; border-right: 1px solid var(--line); background: var(--surface); }
@@ -60,13 +50,6 @@ a { color: inherit; text-decoration: none; }
 .help-card { padding: 16px; margin: 0 3px 20px; border-radius: 14px; background: var(--purple-50); }
 .help-card strong { display: block; margin-bottom: 5px; color: var(--purple-900); font-size: 12px; }
 .help-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
-.profile-chip { display: flex; gap: 10px; align-items: center; padding: 16px 7px 0; border-top: 1px solid var(--line); }
-.avatar { display: grid; flex: 0 0 36px; width: 36px; height: 36px; place-items: center; border-radius: 50%; color: var(--purple-800); background: var(--purple-100); font-weight: 700; font-size: 12px; }
-.profile-copy { min-width: 0; flex: 1; }
-.profile-copy strong, .profile-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.profile-copy strong { font-size: 12px; }
-.profile-copy span { margin-top: 3px; color: var(--muted); font-size: 10px; }
-.logout-button { border: 0; color: var(--muted); background: transparent; font-size: 17px; }
 .main-area { min-width: 0; }
 .topbar { position: sticky; z-index: 4; top: 0; display: flex; height: 76px; align-items: center; justify-content: space-between; padding: 0 clamp(22px, 5vw, 66px); border-bottom: 1px solid var(--line); background: #fffefaed; backdrop-filter: blur(12px); }
 .breadcrumb { color: var(--muted); font-size: 12px; }
@@ -170,12 +153,6 @@ dialog::backdrop { background: #21172d77; backdrop-filter: blur(3px); }
   .search-card .form-grid { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
 }
 @media (max-width: 760px) {
-  .login-layout { grid-template-columns: minmax(0, 440px); gap: 28px; }
-  .login-intro { text-align: center; }
-  .login-intro .brand-mark { margin: 0 auto; }
-  .login-intro h1 { margin: 18px 0 10px; font-size: 38px; }
-  .login-intro p { margin: auto; font-size: 14px; }
-  .login-card { padding: 28px; }
   .app-shell { display: block; }
   .sidebar { position: fixed; z-index: 10; top: 0; left: 0; width: 270px; height: 100dvh; box-shadow: 10px 0 40px #2b1d3b20; transform: translateX(-110%); transition: transform .22s ease; }
   .sidebar.open { transform: translateX(0); }
@@ -188,8 +165,6 @@ dialog::backdrop { background: #21172d77; backdrop-filter: blur(3px); }
   .search-card .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 500px) {
-  .login-screen { padding: 20px; }
-  .login-card { padding: 23px; }
   .form-grid, .search-card .form-grid { grid-template-columns: minmax(0, 1fr); }
   .results-grid, .catalog-grid { grid-template-columns: minmax(0, 1fr); }
   .stats-grid { gap: 9px; }
