@@ -43,6 +43,22 @@ class CoworkingApiTests {
     }
 
     @Test
+    void servesFrontendWithoutAuthentication() throws Exception {
+        mvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("index.html"));
+        mvc.perform(get("/index.html"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("CoworkHub")));
+        mvc.perform(get("/js/app.js"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("text/javascript"));
+        mvc.perform(get("/api/planes"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void roomBookingRejectsOverlapAndAcceptsAdjacentTime() throws Exception {
         LocalDate day = LocalDate.now().plusDays(3);
         LocalDateTime start = day.atTime(17, 0);

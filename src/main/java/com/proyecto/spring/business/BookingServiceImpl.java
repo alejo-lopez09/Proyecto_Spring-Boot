@@ -68,8 +68,8 @@ public class BookingServiceImpl implements BookingService {
             memberId = ownMemberId;
         }
         if (roomId != null && date == null) throw BusinessException.badRequest("La búsqueda por sala requiere fecha");
-        LocalDateTime dayStart = date == null ? LocalDate.MIN.atStartOfDay() : date.atStartOfDay();
-        LocalDateTime dayEnd = date == null ? LocalDate.MAX.atTime(LocalTime.MAX) : date.plusDays(1).atStartOfDay();
+        LocalDateTime dayStart = date == null ? LocalDate.EPOCH.atStartOfDay() : date.atStartOfDay();
+        LocalDateTime dayEnd = date == null ? LocalDate.EPOCH.plusDays(1).atStartOfDay() : date.plusDays(1).atStartOfDay();
         return bookings.search(memberId, roomId, date, dayStart, dayEnd, status).stream().map(this::dto).toList();
     }
 

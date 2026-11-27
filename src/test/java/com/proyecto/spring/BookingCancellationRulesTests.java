@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.Optional;
+import org.mockito.ArgumentCaptor;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -72,6 +73,23 @@ class BookingCancellationRulesTests {
 
         assertEquals("RN-10", addError.getCodigo());
         assertEquals("RN-10", removeError.getCodigo());
+    }
+
+    @Test
+    void bookingSearchWithoutDateUsesDatabaseCompatibleBounds() {
+        BookingRepository bookingRepository = mock(BookingRepository.class);
+        when(bookingRepository.search(any(), isNull(), isNull(), any(), any(), isNull())).thenReturn(java.util.List.of());
+        BookingServiceImpl service = new BookingServiceImpl(bookingRepository, mock(RoomRepository.class),
+                mock(MemberRepository.class), mock(AdditionalServiceRepository.class), mock(LocationRepository.class),
+                Clock.systemUTC());
+
+        service.search(1L, null, null, null, "admin", "ADMIN");
+
+        ArgumentCaptor<LocalDateTime> start = ArgumentCaptor.forClass(LocalDateTime.class);
+        ArgumentCaptor<LocalDateTime> end = ArgumentCaptor.forClass(LocalDateTime.class);
+        verify(bookingRepository).search(eq(1L), isNull(), isNull(), start.capture(), end.capture(), isNull());
+        assertTrue(start.getValue().getYear() >= 1000);
+        assertTrue(end.getValue().getYear() <= 9999);
     }
 
     private BookingServiceImpl serviceFor(Booking booking) {

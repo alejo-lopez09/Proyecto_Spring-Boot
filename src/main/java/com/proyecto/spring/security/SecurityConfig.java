@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .authenticationProvider(provider)
                 .exceptionHandling(errors -> errors.authenticationEntryPoint(entryPoint).accessDeniedHandler(deniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/actuator/health", "/doc/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/favicon.ico",
+                                "/auth/login", "/actuator/health", "/doc/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -1,6 +1,6 @@
 # CoworkHub API
 
-REST API para administrar sedes, salas, miembros, planes y reservas de una red de coworking. Implementada con Java 21, Spring Boot 4.1, Spring Data JPA, MySQL 8 y JWT. Swagger UI es la interfaz interactiva; también se incluye una colección Postman en `docs/CoworkHub.postman_collection.json`.
+Aplicación para administrar sedes, salas, miembros, planes y reservas de una red de coworking. Incluye una interfaz web en español y una API REST, implementadas con Java 21, Spring Boot 4.1, Spring Data JPA, MySQL 8 y JWT. También se incluye una colección Postman en `docs/CoworkHub.postman_collection.json`.
 
 ## Requisitos
 
@@ -31,6 +31,10 @@ Desde PowerShell:
 ```powershell
 .\mvnw.cmd spring-boot:run
 ```
+
+Abre [http://localhost:8080](http://localhost:8080) para usar la interfaz web. Inicia sesión con cualquiera de las cuentas de demostración indicadas abajo. La interfaz permite buscar espacios disponibles, crear reservas, consultar la agenda y explorar sedes, planes y servicios.
+
+La aplicación web usa HTML, CSS y JavaScript sin un proceso de compilación independiente; Spring Boot sirve los archivos estáticos desde `src/main/resources/static`.
 
 Para validar y ejecutar las pruebas sin una instancia MySQL:
 
